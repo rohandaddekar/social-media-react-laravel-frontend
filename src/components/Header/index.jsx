@@ -10,7 +10,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="border-b">
+      <header className="border-b sticky top-0 z-50 bg-white">
         <div className="container flex items-center justify-between py-4">
           <NavLink to="/">
             <img

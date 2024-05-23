@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import UserDropdownMenu from "@/components/Header/UserDropdownMenu";
 import { useSelector } from "react-redux";
 import CreateOrUpdatePost from "@/components/Posts/CreateOrUpdate";
+import { Bell } from "lucide-react";
 
 const Header = () => {
   const authUser = useSelector((state) => state.authUser);
@@ -24,11 +25,18 @@ const Header = () => {
               <li className="hover:underline transition-all ease-in-out">
                 <NavLink to="/">Home</NavLink>
               </li>
-              {!authUser && (
+              {!authUser ? (
                 <li>
                   <Button asChild>
                     <NavLink to="/sign-in">Sign In</NavLink>
                   </Button>
+                </li>
+              ) : (
+                <li className="cursor-pointer relative">
+                  <Bell className="w-7 h-7" />
+                  <span className="absolute border-2 border-gray-300 -top-2 -right-2 text-xs text-white rounded-full w-6 h-6 flex items-center justify-center bg-green-800">
+                    9+
+                  </span>
                 </li>
               )}
             </ul>

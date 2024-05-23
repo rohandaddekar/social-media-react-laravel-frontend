@@ -31,6 +31,7 @@ const CreateOrUpdatePost = ({ type, btnTitle }) => {
     });
 
     createPostReq(formData);
+    console.log("formData : ", { content, images });
   };
 
   useEffect(() => {

@@ -2,11 +2,10 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import UserDropdownMenu from "@/components/Header/UserDropdownMenu";
 import { useSelector } from "react-redux";
+import CreateOrUpdatePost from "@/components/Posts/CreateOrUpdate";
 
 const Header = () => {
   const authUser = useSelector((state) => state.authUser);
-
-  console.log("authUser", authUser);
 
   return (
     <>
@@ -32,14 +31,14 @@ const Header = () => {
                   </Button>
                 </li>
               )}
-              {authUser && (
-                <li>
-                  <Button variant="outline">Create Post</Button>
-                </li>
-              )}
             </ul>
 
-            {authUser && <UserDropdownMenu />}
+            {authUser && (
+              <>
+                <CreateOrUpdatePost type={"create"} btnTitle={"Create Post"} />
+                <UserDropdownMenu />
+              </>
+            )}
           </div>
         </div>
       </header>

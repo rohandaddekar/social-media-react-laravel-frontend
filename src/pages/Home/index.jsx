@@ -11,7 +11,6 @@ const Home = () => {
 
   useEffect(() => {
     laravelEcho.channel("post-channel").listen("PostEvent", (e) => {
-      console.log("New post:", e);
       setData((prev) => [e.post, ...prev]);
     });
 

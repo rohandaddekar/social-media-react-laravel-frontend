@@ -10,6 +10,7 @@ import VerifyEmail from "@/pages/auth/VerifyEmail";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import Error404 from "@/pages/errors/Error404";
+import PostDetails from "@/pages/Post/Details";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/posts/:postId",
+        element: <PostDetails />,
       },
     ],
   },

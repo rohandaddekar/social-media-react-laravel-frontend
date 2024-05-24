@@ -2,11 +2,13 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import UserDropdownMenu from "@/components/Header/UserDropdownMenu";
 import { useSelector } from "react-redux";
-import CreateOrUpdatePost from "@/components/Posts/CreateOrUpdate";
+import CreateOrUpdateModal from "@/components/Posts/CreateOrUpdate";
 import { Bell } from "lucide-react";
+import { useState } from "react";
 
 const Header = () => {
   const authUser = useSelector((state) => state.authUser);
+  const [openPostCreateModal, setOpenPostCreateModal] = useState(false);
 
   return (
     <>
@@ -43,13 +45,24 @@ const Header = () => {
 
             {authUser && (
               <>
-                <CreateOrUpdatePost type={"create"} btnTitle={"Create Post"} />
+                <Button
+                  type="button"
+                  onClick={() => setOpenPostCreateModal(true)}
+                >
+                  Create Post
+                </Button>
                 <UserDropdownMenu />
               </>
             )}
           </div>
         </div>
       </header>
+
+      <CreateOrUpdateModal
+        type={"create"}
+        open={openPostCreateModal}
+        setOpen={setOpenPostCreateModal}
+      />
     </>
   );
 };

@@ -12,7 +12,7 @@ const Home = () => {
         <div className="sticky top-24 col-span-3 border rounded-lg">
           <LeftSection authUser={authUser} />
         </div>
-        <div className="col-span-6 p-5 border rounded-lg">
+        <div className="col-span-6">
           <MidSection authUser={authUser} />
         </div>
         <div className="sticky top-24 col-span-3 p-5 border rounded-lg">

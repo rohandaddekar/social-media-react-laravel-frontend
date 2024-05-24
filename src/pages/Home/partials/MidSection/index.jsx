@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import useAllPosts from "@/api/posts/All";
 import { laravelEcho } from "@/lib/laravelEcho.config";
+import PostCard from "@/components/Posts/Card";
 
 const MidSection = () => {
   const { allPostsReq, data, setData, isLoading } = useAllPosts();
@@ -24,10 +25,10 @@ const MidSection = () => {
       {isLoading ? (
         <>loading...</>
       ) : (
-        <ul>
+        <ul className="space-y-3">
           {data?.map((post, i) => (
-            <li key={i} className="bg-gray-300 p-5 my-3">
-              {post?.content}
+            <li key={i}>
+              <PostCard post={post} />
             </li>
           ))}
         </ul>

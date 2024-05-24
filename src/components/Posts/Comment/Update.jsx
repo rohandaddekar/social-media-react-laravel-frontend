@@ -7,29 +7,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import FileUpload from "@/components/FileUpload";
 import useCreatePost from "@/api/posts/Create";
 import { Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-const CreateOrUpdatePostModal = ({ type, open, setOpen }) => {
+const UpdateCommentModal = ({ open, setOpen }) => {
   const { createPostReq, data, error, setError, isLoading } = useCreatePost();
 
-  const [content, setContent] = useState("");
-  const [images, setImages] = useState([]);
+  const [comment, setComment] = useState("");
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("content", content);
-    images.forEach((image) => {
-      formData.append("images[]", image);
-    });
-
-    createPostReq(formData);
-    console.log("formData : ", { content, images });
+    console.log("formData : ", { comment });
   };
 
   useEffect(() => {
@@ -40,8 +31,7 @@ const CreateOrUpdatePostModal = ({ type, open, setOpen }) => {
 
   useEffect(() => {
     if (!open) {
-      setImages([]);
-      setContent("");
+      setComment("");
       setError("");
     }
   }, [open, setError]);
@@ -50,35 +40,24 @@ const CreateOrUpdatePostModal = ({ type, open, setOpen }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>
-            {type === "create" ? "Create New" : "Update"} Post
-          </DialogTitle>
+          <DialogTitle>Update Comment</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={submitHandler}
           className="grid gap-4 py-4 border-t pt-5"
         >
           <div className="space-y-1.5">
-            <Textarea
+            <Input
               placeholder="write here..."
-              name="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              error={error?.errors?.content?.[0]}
-            />
-          </div>
-          <div className="space-y-1.5">
-            <FileUpload
-              multiple
-              name="images"
-              accept="image/*"
-              className="mb-2"
-              setInputFiles={setImages}
+              name="comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              error={error?.errors?.comment?.[0]}
             />
           </div>
           <div className="space-y-1.5">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {type === "create" ? "Create" : "Update"} Post
+              Update Comment
               {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
             </Button>
           </div>
@@ -88,4 +67,4 @@ const CreateOrUpdatePostModal = ({ type, open, setOpen }) => {
   );
 };
 
-export default CreateOrUpdatePostModal;
+export default UpdateCommentModal;

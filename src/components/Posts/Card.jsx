@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { MessageCircleMore, Send, ThumbsUp } from "lucide-react";
 import moment from "moment";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import CommentCard from "@/components/Posts/Comment/Card";
 import { useState } from "react";
 import {
@@ -16,6 +16,7 @@ import { Edit, Ellipsis, Trash2 } from "lucide-react";
 import CreateOrUpdatePostModal from "@/components/Posts/CreateOrUpdate";
 import AlertModal from "@/components/AlertModal";
 import ShareModal from "@/components/Posts/Share";
+import ImagesModal from "@/components/Posts/ImagesModal";
 
 const renderImages = (images) => {
   if (images?.length === 0) {
@@ -97,12 +98,23 @@ const renderImages = (images) => {
   }
 };
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, redirect = true }) => {
+  const navigate = useNavigate();
+
   const [showComment, setShowComment] = useState(false);
   const [openPostUpdateModal, setOpenPostUpdateModal] = useState(false);
   const [openPostDeleteAlertModal, setOpenPostDeleteAlertModal] =
     useState(false);
   const [openPostShareModal, setOpenPostShareModal] = useState(false);
+  const [openPostImagesModal, setOpenPostImagesModal] = useState(false);
+
+  const imgClickHandler = () => {
+    if (redirect) {
+      navigate(`/posts/${post?.id}`);
+    } else {
+      setOpenPostImagesModal(true);
+    }
+  };
 
   return (
     <>
@@ -176,12 +188,12 @@ const PostCard = ({ post }) => {
           )}
         </div>
 
-        <NavLink
-          to={`/posts/${post?.id}`}
+        <div
           className="block mt-3 cursor-pointer hover:opacity-80 transition-all ease-in-out"
+          onClick={imgClickHandler}
         >
           {renderImages(post?.images)}
-        </NavLink>
+        </div>
 
         <div className="px-5 mt-3">
           <div className="flex items-center justify-between mb-2">
@@ -233,6 +245,11 @@ const PostCard = ({ post }) => {
         setOpen={setOpenPostDeleteAlertModal}
       />
       <ShareModal open={openPostShareModal} setOpen={setOpenPostShareModal} />
+      <ImagesModal
+        open={openPostImagesModal}
+        setOpen={setOpenPostImagesModal}
+        images={post?.images}
+      />
     </>
   );
 };

@@ -1,17 +1,19 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
+import useAuthHeaders from "@/api/authHeaders";
 
-const useAllPosts = () => {
+const useShowPost = () => {
   const axios = useAxios();
+  const authHeaders = useAuthHeaders();
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const allPostsReq = useCallback(async () => {
+  const showPostReq = async (id) => {
     try {
       setIsLoading(true);
-      const res = await axios.get("/posts");
+      const res = await axios.get(`/posts/${id}`, authHeaders);
       setData(res?.data?.data);
     } catch (error) {
       console.log("failed to fetch all posts: ", error);
@@ -19,13 +21,9 @@ const useAllPosts = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [axios]);
+  };
 
-  const reFetchAllPosts = useCallback(async () => {
-    await allPostsReq();
-  }, [allPostsReq]);
-
-  return { data, setData, error, isLoading, allPostsReq, reFetchAllPosts };
+  return { data, error, isLoading, showPostReq };
 };
 
-export default useAllPosts;
+export default useShowPost;

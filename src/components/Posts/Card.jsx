@@ -5,7 +5,7 @@ import { MessageCircleMore, Send, ThumbsUp } from "lucide-react";
 import moment from "moment";
 import { NavLink, useNavigate } from "react-router-dom";
 import CommentCard from "@/components/Posts/Comment/Card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +17,8 @@ import CreateOrUpdatePostModal from "@/components/Posts/CreateOrUpdate";
 import AlertModal from "@/components/AlertModal";
 import ShareModal from "@/components/Posts/Share";
 import ImagesModal from "@/components/Posts/ImagesModal";
+import useLikeUnlikePost from "@/api/posts/LikeUnlike";
+import useDeletePost from "@/api/posts/Delete";
 
 const renderImages = (images) => {
   if (images?.length === 0) {
@@ -98,15 +100,28 @@ const renderImages = (images) => {
   }
 };
 
-const PostCard = ({ post, redirect = true }) => {
+const PostCard = ({ post, redirect = true, setReFetch }) => {
   const navigate = useNavigate();
+  const { likeUnlikePostReq, data: dataLikeUnlikePost } = useLikeUnlikePost();
+  const {
+    data: dataDelete,
+    deletePostReq,
+    isLoading: isLoadingDelete,
+  } = useDeletePost();
 
+  const [showMore, setShowMore] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [openPostUpdateModal, setOpenPostUpdateModal] = useState(false);
   const [openPostDeleteAlertModal, setOpenPostDeleteAlertModal] =
     useState(false);
   const [openPostShareModal, setOpenPostShareModal] = useState(false);
   const [openPostImagesModal, setOpenPostImagesModal] = useState(false);
+
+  useEffect(() => {
+    if (dataLikeUnlikePost || dataDelete) {
+      setReFetch(true);
+    }
+  }, [dataLikeUnlikePost, dataDelete, setReFetch]);
 
   const imgClickHandler = () => {
     if (redirect) {
@@ -147,45 +162,58 @@ const PostCard = ({ post, redirect = true }) => {
                 {moment(post?.created_at, "YYYYMMDD").fromNow()}
               </p>
             </div>
-            <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Ellipsis className="w-5 h-5 text-gray-500" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => setOpenPostUpdateModal(true)}
-                  >
-                    <Edit className="mr-2 h-4 w-4" />
-                    <span>Edit</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => setOpenPostDeleteAlertModal(true)}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    <span>Delete</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+
+            {post?.is_owner && (
+              <div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Ellipsis className="w-5 h-5 text-gray-500" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={() => setOpenPostUpdateModal(true)}
+                    >
+                      <Edit className="mr-2 h-4 w-4" />
+                      <span>Edit</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={() => setOpenPostDeleteAlertModal(true)}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>Delete</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="px-5 mt-3">
-          {post?.content?.length > 200 ? (
-            <>
-              <p>
-                {post?.content.slice(0, 200) + "... "}
-                <span className="text-end text-gray-600 text-xs cursor-pointer">
-                  show more
-                </span>
-              </p>
-            </>
+          {post?.content?.length > 200 && !showMore ? (
+            <p>{post?.content.slice(0, 200) + "... "}</p>
           ) : (
             <p>{post?.content}</p>
           )}
+
+          {post?.content?.length > 200 &&
+            (showMore ? (
+              <span
+                className="block text-end text-gray-600 text-xs cursor-pointer"
+                onClick={() => setShowMore(false)}
+              >
+                show less
+              </span>
+            ) : (
+              <span
+                className="block text-end text-gray-600 text-xs cursor-pointer"
+                onClick={() => setShowMore(true)}
+              >
+                show more
+              </span>
+            ))}
         </div>
 
         <div
@@ -211,6 +239,7 @@ const PostCard = ({ post, redirect = true }) => {
                 "flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out",
                 post?.is_liked ? "text-blue-600" : "text-gray-500",
               ])}
+              onClick={() => likeUnlikePostReq(post?.id)}
             >
               <ThumbsUp className="w-4 h-4 mr-1" />
               Like
@@ -232,7 +261,13 @@ const PostCard = ({ post, redirect = true }) => {
           </div>
         </div>
 
-        {showComment && <CommentCard />}
+        {showComment && (
+          <CommentCard
+            comments={post?.comments}
+            postId={post?.id}
+            setReFetch={setReFetch}
+          />
+        )}
       </div>
 
       <CreateOrUpdatePostModal
@@ -243,6 +278,8 @@ const PostCard = ({ post, redirect = true }) => {
       <AlertModal
         open={openPostDeleteAlertModal}
         setOpen={setOpenPostDeleteAlertModal}
+        isLoading={isLoadingDelete}
+        deleteHandler={() => deletePostReq(post?.id)}
       />
       <ShareModal open={openPostShareModal} setOpen={setOpenPostShareModal} />
       <ImagesModal

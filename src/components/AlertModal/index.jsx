@@ -10,8 +10,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Loader2 } from "lucide-react";
 
-const AlertModal = ({ open, setOpen, title, description }) => {
+const AlertModal = ({
+  open,
+  setOpen,
+  title,
+  description,
+  isLoading,
+  deleteHandler,
+}) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
@@ -26,7 +34,10 @@ const AlertModal = ({ open, setOpen, title, description }) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={deleteHandler}>
+            Continue
+            {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

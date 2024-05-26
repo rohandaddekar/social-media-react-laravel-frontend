@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 import useAxios from "@/api/axiosInstance";
 import useAuthHeaders from "@/api/authHeaders";
+import toast from "react-hot-toast";
 
-const useShowPost = () => {
+const useShowPostComment = () => {
   const axios = useAxios();
   const authHeaders = useAuthHeaders();
 
@@ -10,14 +11,17 @@ const useShowPost = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const showPostReq = useCallback(
+  const showPostCommentReq = useCallback(
     async (id) => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`/posts/${id}`, authHeaders);
+        const res = await axios.get(`/posts/comments/${id}`, authHeaders);
         setData(res?.data?.data);
       } catch (error) {
-        console.log("failed to fetch all posts: ", error);
+        console.log("failed to fetch post comment: ", error);
+        toast.error(
+          error?.response?.data?.message || "Failed to fetch comment"
+        );
         setError(error);
       } finally {
         setIsLoading(false);
@@ -26,14 +30,14 @@ const useShowPost = () => {
     [axios, authHeaders]
   );
 
-  const reFetchPost = useCallback(
+  const reFetchPostComment = useCallback(
     async (id) => {
-      await showPostReq(id);
+      await showPostCommentReq(id);
     },
-    [showPostReq]
+    [showPostCommentReq]
   );
 
-  return { data, error, isLoading, showPostReq, reFetchPost };
+  return { data, error, isLoading, showPostCommentReq, reFetchPostComment };
 };
 
-export default useShowPost;
+export default useShowPostComment;

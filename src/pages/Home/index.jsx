@@ -9,13 +9,13 @@ const Home = () => {
   return (
     <>
       <section className="container py-10 grid grid-cols-12 items-start gap-5">
-        <div className="sticky top-24 col-span-3 border rounded-lg">
+        <div className="sticky top-24 col-span-3 border rounded-lg hidden lg:block">
           <LeftSection authUser={authUser} />
         </div>
-        <div className="col-span-6">
+        <div className="col-span-12 md:col-span-9 lg:col-span-6">
           <MidSection authUser={authUser} />
         </div>
-        <div className="sticky top-24 col-span-3 p-5 border rounded-lg">
+        <div className="sticky top-24 hidden md:block col-span-3 p-5 border rounded-lg">
           <RightSection authUser={authUser} />
         </div>
       </section>

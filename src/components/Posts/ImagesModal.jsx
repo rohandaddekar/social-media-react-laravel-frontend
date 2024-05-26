@@ -40,6 +40,9 @@ const ImagesModal = ({ open, setOpen, images }) => {
               <ChevronLeft className="w-5 h-5 mt-[2px]" />
               Previous
             </Button>
+            <p className="text-gray-500 text-sm">
+              showing {currentImg + 1} of {images?.length}
+            </p>
             <Button
               variant="outline"
               className="flex items-center gap-1"

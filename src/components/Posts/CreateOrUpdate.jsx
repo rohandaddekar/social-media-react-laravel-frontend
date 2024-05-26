@@ -10,12 +10,23 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import FileUpload from "@/components/FileUpload";
-import useCreatePost from "@/api/posts/Create";
 import { Loader2 } from "lucide-react";
 
-const CreateOrUpdatePostModal = ({ type, open, setOpen }) => {
-  const { createPostReq, data, error, setError, isLoading } = useCreatePost();
-
+const CreateOrUpdatePostModal = ({
+  type,
+  open,
+  setOpen,
+  postId,
+  submitReq,
+  submitData,
+  submitError,
+  // submitSetError,
+  submitIsLoading,
+  showReq,
+  showData,
+  showError,
+  showIsLoading,
+}) => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
 
@@ -28,23 +39,42 @@ const CreateOrUpdatePostModal = ({ type, open, setOpen }) => {
       formData.append("images[]", image);
     });
 
-    createPostReq(formData);
-    console.log("formData : ", { content, images });
+    if (type === "create") {
+      submitReq(formData);
+    } else if (type === "update") {
+      submitReq(formData, postId);
+    }
   };
 
   useEffect(() => {
-    if (data) {
+    if (type === "update" && postId) {
+      showReq(postId);
+    }
+  }, [postId]);
+
+  useEffect(() => {
+    if (type === "update" && postId && showData) {
+      setContent(showData?.content);
+      setImages(showData?.images);
+    }
+  }, [showData, type, postId]);
+
+  useEffect(() => {
+    if (submitData) {
       setOpen(false);
     }
-  }, [data]);
+  }, [submitData]);
 
   useEffect(() => {
     if (!open) {
       setImages([]);
-      setContent("");
-      setError("");
+      // setContent("");
+      // submitSetError("");
     }
-  }, [open, setError]);
+  }, [
+    open,
+    // submitSetError
+  ]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -54,35 +84,47 @@ const CreateOrUpdatePostModal = ({ type, open, setOpen }) => {
             {type === "create" ? "Create New" : "Update"} Post
           </DialogTitle>
         </DialogHeader>
-        <form
-          onSubmit={submitHandler}
-          className="grid gap-4 py-4 border-t pt-5"
-        >
-          <div className="space-y-1.5">
-            <Textarea
-              placeholder="write here..."
-              name="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              error={error?.errors?.content?.[0]}
-            />
-          </div>
-          <div className="space-y-1.5">
-            <FileUpload
-              multiple
-              name="images"
-              accept="image/*"
-              className="mb-2"
-              setInputFiles={setImages}
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {type === "create" ? "Create" : "Update"} Post
-              {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
-            </Button>
-          </div>
-        </form>
+        {type === "update" && showIsLoading ? (
+          <p className="text-center mt-5 text-gray-400">loading...</p>
+        ) : showError ? (
+          <p className="text-center mt-5 text-red-400">failed to load</p>
+        ) : (
+          <form
+            onSubmit={submitHandler}
+            className="grid gap-4 py-4 border-t pt-5"
+          >
+            <div className="space-y-1.5">
+              <Textarea
+                placeholder="write here..."
+                name="content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                error={submitError?.errors?.content?.[0]}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <FileUpload
+                multiple
+                name="images"
+                accept="image/*"
+                className="mb-2"
+                setInputFiles={setImages}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={submitIsLoading}
+              >
+                {type === "create" ? "Create" : "Update"} Post
+                {submitIsLoading && (
+                  <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                )}
+              </Button>
+            </div>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );

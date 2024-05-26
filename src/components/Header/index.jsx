@@ -5,9 +5,19 @@ import { useSelector } from "react-redux";
 import CreateOrUpdateModal from "@/components/Posts/CreateOrUpdate";
 import { Bell } from "lucide-react";
 import { useState } from "react";
+import useCreatePost from "@/api/posts/Create";
 
 const Header = () => {
   const authUser = useSelector((state) => state.authUser);
+
+  const {
+    createPostReq,
+    data: dataCreatePost,
+    error: errorCreatePost,
+    setError: setErrorCreatePost,
+    isLoading: isLoadingCreatePost,
+  } = useCreatePost();
+
   const [openPostCreateModal, setOpenPostCreateModal] = useState(false);
 
   return (
@@ -62,6 +72,11 @@ const Header = () => {
         type={"create"}
         open={openPostCreateModal}
         setOpen={setOpenPostCreateModal}
+        submitReq={createPostReq}
+        submitData={dataCreatePost}
+        submitError={errorCreatePost}
+        submitSetError={setErrorCreatePost}
+        submitIsLoading={isLoadingCreatePost}
       />
     </>
   );

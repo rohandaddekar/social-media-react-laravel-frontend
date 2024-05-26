@@ -19,6 +19,8 @@ import ShareModal from "@/components/Posts/Share";
 import ImagesModal from "@/components/Posts/ImagesModal";
 import useLikeUnlikePost from "@/api/posts/LikeUnlike";
 import useDeletePost from "@/api/posts/Delete";
+import useShowPost from "@/api/posts/Show";
+import useUpdatePost from "@/api/posts/Update";
 
 const renderImages = (images) => {
   if (images?.length === 0) {
@@ -104,11 +106,24 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
   const navigate = useNavigate();
   const { likeUnlikePostReq, data: dataLikeUnlikePost } = useLikeUnlikePost();
   const {
+    data: dataShowPost,
+    error: errorShowPost,
+    isLoading: isLoadingShowPost,
+    showPostReq,
+  } = useShowPost();
+  const {
     data: dataDelete,
     deletePostReq,
     isLoading: isLoadingDelete,
   } = useDeletePost();
+  const {
+    data: dataUpdatePost,
+    isLoading: isLoadingUpdatePost,
+    error: errorUpdatePost,
+    updatePostReq,
+  } = useUpdatePost();
 
+  const [selectedPost, setSelectedPost] = useState(null);
   const [showMore, setShowMore] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [openPostUpdateModal, setOpenPostUpdateModal] = useState(false);
@@ -172,14 +187,20 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
                   <DropdownMenuContent>
                     <DropdownMenuItem
                       className="cursor-pointer"
-                      onClick={() => setOpenPostUpdateModal(true)}
+                      onClick={() => {
+                        setOpenPostUpdateModal(true);
+                        setSelectedPost(post?.id);
+                      }}
                     >
                       <Edit className="mr-2 h-4 w-4" />
                       <span>Edit</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="cursor-pointer"
-                      onClick={() => setOpenPostDeleteAlertModal(true)}
+                      onClick={() => {
+                        setOpenPostDeleteAlertModal(true);
+                        setSelectedPost(post?.id);
+                      }}
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
                       <span>Delete</span>
@@ -274,12 +295,22 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
         type={"update"}
         open={openPostUpdateModal}
         setOpen={setOpenPostUpdateModal}
+        postId={selectedPost}
+        submitReq={updatePostReq}
+        submitData={dataUpdatePost}
+        submitError={errorUpdatePost}
+        // submitSetError={setErrorCreatePost}
+        submitIsLoading={isLoadingUpdatePost}
+        showReq={showPostReq}
+        showData={dataShowPost}
+        showError={errorShowPost}
+        showIsLoading={isLoadingShowPost}
       />
       <AlertModal
         open={openPostDeleteAlertModal}
         setOpen={setOpenPostDeleteAlertModal}
         isLoading={isLoadingDelete}
-        deleteHandler={() => deletePostReq(post?.id)}
+        deleteHandler={() => deletePostReq(selectedPost)}
       />
       <ShareModal open={openPostShareModal} setOpen={setOpenPostShareModal} />
       <ImagesModal

@@ -168,11 +168,9 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
                 {post?.user?.first_name} {post?.user?.last_name}
               </NavLink>
               <p className="text-gray-500 text-xs">
-                {post?.user?.about_me
-                  ? post?.user?.about_me?.length > 80
-                    ? post?.user?.about_me.slice(0, 80) + "..."
-                    : post?.user?.about_me
-                  : `About me`}
+                {post?.user?.about_me?.length > 80
+                  ? post?.user?.about_me.slice(0, 80) + "..."
+                  : post?.user?.about_me}
               </p>
               <p className="text-gray-500 text-xs mt-1">
                 {moment(post?.created_at).fromNow() ===

@@ -5,18 +5,12 @@ const LeftSection = ({ authUser }) => {
     <>
       <div className="relative flex justify-center">
         <img
-          src={
-            authUser?.profile_banner ||
-            "https://res.cloudinary.com/omaha-code/image/upload/ar_4:3,c_fill,dpr_1.0,e_art:quartz,g_auto,h_396,q_auto:best,t_Linkedin_official,w_1584/v1561576558/mountains-1412683_1280.png"
-          }
+          src={authUser?.profile_banner_image}
           alt="Profile Banner"
           className="rounded-t-lg h-20 w-full object-cover"
         />
         <img
-          src={
-            authUser?.profile_image ||
-            "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg"
-          }
+          src={authUser?.profile_image}
           alt="User Profile Image"
           className="absolute w-20 h-20 top-1/2 rounded-full border-[3px] border-white bg-white"
         />
@@ -28,8 +22,7 @@ const LeftSection = ({ authUser }) => {
             {authUser?.first_name + " " + authUser?.last_name}
           </h2>
           <p className="text-center text-gray-500 text-xs">
-            {authUser?.about_me ||
-              "Software Developer || <ReactJs /> || <VueJs /> || MERN || <HTML /> || { CSS } || `JavaScript` || 🎓 GATE-2022 82.4 %ile |"}
+            {authUser?.about_me}
           </p>
         </div>
 

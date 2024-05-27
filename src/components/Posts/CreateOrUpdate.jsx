@@ -37,12 +37,12 @@ const CreateOrUpdatePostModal = ({
 
     const formData = new FormData();
     formData.append("content", content);
-    images.forEach((image) => {
+    images?.forEach((image) => {
       formData.append("images[]", image);
     });
 
     if (type === "update") {
-      uploadedImages.forEach((image) => {
+      uploadedImages?.forEach((image) => {
         formData.append("old_images[]", image);
       });
     }

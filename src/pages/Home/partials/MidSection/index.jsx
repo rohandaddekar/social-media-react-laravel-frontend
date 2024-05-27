@@ -47,11 +47,17 @@ const MidSection = () => {
         <>loading...</>
       ) : (
         <ul className="space-y-3">
-          {data?.data?.map((post, i) => (
-            <li key={i}>
-              <PostCard post={post} setReFetch={setReFetch} />
+          {data?.data?.length > 0 ? (
+            data?.data?.map((post, i) => (
+              <li key={i}>
+                <PostCard post={post} setReFetch={setReFetch} />
+              </li>
+            ))
+          ) : (
+            <li className="bg-gray-50 rounded-md p-3 text-center">
+              no post yet...
             </li>
-          ))}
+          )}
         </ul>
       )}
     </>

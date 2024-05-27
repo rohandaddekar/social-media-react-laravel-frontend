@@ -37,6 +37,8 @@ const useSignIn = () => {
           email: res?.data?.data?.user?.email,
           email_verified_at: res?.data?.data?.user?.emai_verified_atl,
           profile_image: res?.data?.data?.user?.profile_image,
+          profile_banner_image: res?.data?.data?.user?.profile_banner_image,
+          about_me: res?.data?.data?.user?.about_me,
           role: res?.data?.data?.user?.role,
           token: res?.data?.data?.token,
         })

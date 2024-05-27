@@ -60,18 +60,18 @@ const renderImages = (images) => {
         <img
           src={images[0]}
           alt="post image 1"
-          className="w-[48%] mx-[1%] h-auto"
+          className="w-[48%] mx-[1%] h-[400px]"
         />
         <div className="flex flex-col w-[48%] mx-[1%] gap-3">
           <img
             src={images[1]}
             alt="post image 2"
-            className="w-full h-[48%] object-cover"
+            className="w-full h-[200px] object-cover"
           />
           <img
             src={images[2]}
             alt="post image 3"
-            className="w-full h-[48%] object-cover"
+            className="w-full h-[200px] object-cover"
           />
         </div>
       </div>
@@ -120,6 +120,7 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
     data: dataUpdatePost,
     isLoading: isLoadingUpdatePost,
     error: errorUpdatePost,
+    setError: setErrorUpdatePost,
     updatePostReq,
   } = useUpdatePost();
 
@@ -174,7 +175,10 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
                   : `About me`}
               </p>
               <p className="text-gray-500 text-xs mt-1">
-                {moment(post?.created_at, "YYYYMMDD").fromNow()}
+                {moment(post?.created_at).fromNow() ===
+                moment(post?.updated_at).fromNow()
+                  ? moment(post?.created_at).fromNow()
+                  : moment(post?.updated_at).fromNow() + " (updated)"}
               </p>
             </div>
 
@@ -299,12 +303,13 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
         submitReq={updatePostReq}
         submitData={dataUpdatePost}
         submitError={errorUpdatePost}
-        // submitSetError={setErrorCreatePost}
+        submitSetError={setErrorUpdatePost}
         submitIsLoading={isLoadingUpdatePost}
         showReq={showPostReq}
         showData={dataShowPost}
         showError={errorShowPost}
         showIsLoading={isLoadingShowPost}
+        setReFetch={setReFetch}
       />
       <AlertModal
         open={openPostDeleteAlertModal}

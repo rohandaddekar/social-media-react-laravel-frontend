@@ -14,19 +14,30 @@ const useUpdatePost = () => {
   const updatePostReq = async (payload, id) => {
     try {
       setIsLoading(true);
-      const res = await axios.patch(`/posts/${id}`, payload, authHeaders);
+      const res = await axios.post(
+        `/posts/${id}`,
+        payload,
+        // authHeaders
+        {
+          ...authHeaders,
+          headers: {
+            ...authHeaders.headers,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       toast.success(res?.data?.message || "post updated successfully");
       setData(res?.data?.data);
     } catch (error) {
       console.log("failed to update post: ", error);
       toast.error(error?.response?.data?.message || "Failed to update post");
-      setError(error);
+      setError(error?.response?.data);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { data, error, isLoading, updatePostReq };
+  return { data, error, isLoading, setError, updatePostReq };
 };
 
 export default useUpdatePost;

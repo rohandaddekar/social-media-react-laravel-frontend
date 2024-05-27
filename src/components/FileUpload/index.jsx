@@ -8,6 +8,8 @@ const FileUpload = ({
   multiple = false,
   className,
   setInputFiles,
+  uploadedImages,
+  setUploadedImages,
   ...props
 }) => {
   const [files, setFiles] = useState([]);
@@ -23,6 +25,12 @@ const FileUpload = ({
 
     setFiles(images);
     setInputFiles(images);
+  };
+
+  const removeUploadedImgHandler = (i) => {
+    const images = uploadedImages.filter((_, index) => index !== i);
+
+    setUploadedImages(images);
   };
 
   const uploadBtnHandler = () => {
@@ -48,6 +56,25 @@ const FileUpload = ({
           Click here to upload files
         </p>
       </div>
+
+      {uploadedImages &&
+        uploadedImages.map((image, i) => (
+          <div key={i} className="relative group w-24 h-24 inline-block mr-3">
+            <img
+              src={image}
+              alt={"post image"}
+              className="border w-full h-full object-cover rounded-md"
+            />
+            <div
+              className="absolute top-0 right-0 left-0 bottom-0 bg-gray-700/60 
+                          rounded-md flex items-center justify-center text-white cursor-pointer
+                          group-hover:opacity-100 opacity-0 transition-all ease-in-out"
+              onClick={() => removeUploadedImgHandler(i)}
+            >
+              <Trash2 />
+            </div>
+          </div>
+        ))}
 
       {files &&
         Array.from(files).map((image, i) => (

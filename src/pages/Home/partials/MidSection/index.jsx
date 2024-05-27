@@ -25,7 +25,15 @@ const MidSection = () => {
 
   useEffect(() => {
     laravelEcho.channel("post-channel").listen("PostEvent", (e) => {
-      setData((prev) => [e.post, ...prev]);
+      setData((prev) => {
+        const parsedImages = JSON.parse(e.post.images);
+
+        console.log("e.post: ", e.post);
+        return {
+          ...prev,
+          data: [{ ...e.post, images: parsedImages }, ...prev.data],
+        };
+      });
     });
 
     return () => {

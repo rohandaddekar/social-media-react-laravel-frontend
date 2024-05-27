@@ -20,15 +20,17 @@ const CreateOrUpdatePostModal = ({
   submitReq,
   submitData,
   submitError,
-  // submitSetError,
+  submitSetError,
   submitIsLoading,
   showReq,
   showData,
   showError,
   showIsLoading,
+  setReFetch,
 }) => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -38,6 +40,12 @@ const CreateOrUpdatePostModal = ({
     images.forEach((image) => {
       formData.append("images[]", image);
     });
+
+    if (type === "update") {
+      uploadedImages.forEach((image) => {
+        formData.append("old_images[]", image);
+      });
+    }
 
     if (type === "create") {
       submitReq(formData);
@@ -50,17 +58,22 @@ const CreateOrUpdatePostModal = ({
     if (type === "update" && postId) {
       showReq(postId);
     }
-  }, [postId]);
+  }, [postId, open]);
 
   useEffect(() => {
     if (type === "update" && postId && showData) {
       setContent(showData?.content);
-      setImages(showData?.images);
+      setUploadedImages(showData?.images);
     }
   }, [showData, type, postId]);
 
   useEffect(() => {
     if (submitData) {
+      if (type === "update") {
+        setReFetch(true);
+        setOpen(false);
+      }
+
       setOpen(false);
     }
   }, [submitData]);
@@ -68,13 +81,10 @@ const CreateOrUpdatePostModal = ({
   useEffect(() => {
     if (!open) {
       setImages([]);
-      // setContent("");
-      // submitSetError("");
+      setContent("");
+      submitSetError("");
     }
-  }, [
-    open,
-    // submitSetError
-  ]);
+  }, [open, submitSetError]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -109,6 +119,8 @@ const CreateOrUpdatePostModal = ({
                 accept="image/*"
                 className="mb-2"
                 setInputFiles={setImages}
+                uploadedImages={uploadedImages}
+                setUploadedImages={setUploadedImages}
               />
             </div>
             <div className="space-y-1.5">

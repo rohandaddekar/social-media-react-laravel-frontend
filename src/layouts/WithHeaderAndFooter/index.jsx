@@ -1,8 +1,15 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useSelector } from "react-redux";
 
-const index = () => {
+const Index = () => {
+  const authUser = useSelector((state) => state.authUser);
+
+  if (!authUser) {
+    return <Navigate to="/sign-in" />;
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -14,4 +21,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

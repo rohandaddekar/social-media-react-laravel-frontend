@@ -11,6 +11,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import FileUpload from "@/components/FileUpload";
 import { Loader2 } from "lucide-react";
+import DatePicker from "@/components/DatePicker";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const CreateOrUpdatePostModal = ({
   type,
@@ -30,16 +39,32 @@ const CreateOrUpdatePostModal = ({
 }) => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
+  const [publishOn, setPublishOn] = useState();
+  const [minTime, setMinTime] = useState(new Date());
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+
+  const handleDateChange = (date) => {
+    setStartDate(date);
+    if (date.toDateString() === new Date().toDateString()) {
+      setMinTime(new Date());
+    } else {
+      setMinTime(new Date(0, 0, 0, 0, 0));
+    }
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
     formData.append("content", content);
+    formData.append("content", content);
     images?.forEach((image) => {
       formData.append("images[]", image);
     });
+    if (publishOn === "later") {
+      formData.append("publish_at", startDate.toISOString());
+    }
 
     if (type === "update") {
       uploadedImages?.forEach((image) => {
@@ -122,6 +147,27 @@ const CreateOrUpdatePostModal = ({
                 uploadedImages={uploadedImages}
                 setUploadedImages={setUploadedImages}
               />
+            </div>
+            <div>
+              <Label className="text-sm font-normal mb-2">Publish On</Label>
+
+              <Select value={publishOn} onValueChange={setPublishOn}>
+                <SelectTrigger className="w-full mb-2">
+                  <SelectValue placeholder="Now" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="now">Now</SelectItem>
+                  <SelectItem value="later">Later</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {publishOn === "later" && (
+                <DatePicker
+                  startDate={startDate}
+                  minTime={minTime}
+                  handleDateChange={handleDateChange}
+                />
+              )}
             </div>
             <div className="space-y-1.5">
               <Button

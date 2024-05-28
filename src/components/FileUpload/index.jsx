@@ -77,13 +77,27 @@ const FileUpload = ({
         ))}
 
       {files &&
-        Array.from(files).map((image, i) => (
+        Array.from(files).map((file, i) => (
           <div key={i} className="relative group w-24 h-24 inline-block mr-3">
-            <img
-              src={URL.createObjectURL(image)}
-              alt={image.name}
-              className="border w-full h-full object-cover rounded-md"
-            />
+            {file.type.startsWith("image/") && (
+              <img
+                src={URL.createObjectURL(file)}
+                alt={file.name}
+                className="border w-full h-full object-cover rounded-md"
+              />
+            )}
+
+            {file.type.startsWith("video/") && (
+              <video
+                src={URL.createObjectURL(file)}
+                alt={file.name}
+                className="border w-full h-full object-cover rounded-md"
+                autoPlay={false}
+                muted={true}
+                loop={false}
+              />
+            )}
+
             <div
               className="absolute top-0 right-0 left-0 bottom-0 bg-gray-700/60 
                           rounded-md flex items-center justify-center text-white cursor-pointer

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAllPosts from "@/api/posts/All";
 import { laravelEcho } from "@/lib/laravelEcho.config";
 import PostCard from "@/components/Posts/Card";
+import Stories from "@/components/Stories";
 
 const MidSection = () => {
   const { allPostsReq, data, setData, isLoading, reFetchAllPosts } =
@@ -43,6 +44,11 @@ const MidSection = () => {
 
   return (
     <>
+      {/* START: Stories */}
+      <Stories />
+      {/* END: Stories */}
+
+      {/* START: All Posts */}
       {isLoading ? (
         <>loading...</>
       ) : (
@@ -60,6 +66,7 @@ const MidSection = () => {
           )}
         </ul>
       )}
+      {/* END: All Posts */}
     </>
   );
 };

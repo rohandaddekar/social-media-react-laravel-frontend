@@ -173,10 +173,7 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
                   : post?.user?.about_me}
               </p>
               <p className="text-gray-500 text-xs mt-1">
-                {moment(post?.created_at).fromNow() ===
-                moment(post?.updated_at).fromNow()
-                  ? moment(post?.created_at).fromNow()
-                  : moment(post?.updated_at).fromNow() + " (updated)"}
+                {moment(post?.publish_at).fromNow()}
               </p>
             </div>
 

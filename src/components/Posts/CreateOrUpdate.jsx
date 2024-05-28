@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import moment from "moment";
 
 const CreateOrUpdatePostModal = ({
   type,
@@ -58,12 +59,14 @@ const CreateOrUpdatePostModal = ({
 
     const formData = new FormData();
     formData.append("content", content);
-    formData.append("content", content);
     images?.forEach((image) => {
       formData.append("images[]", image);
     });
     if (publishOn === "later") {
-      formData.append("publish_at", startDate.toISOString());
+      formData.append(
+        "publish_at",
+        moment(startDate).format("YYYY-MM-DD HH:mm:ss")
+      );
     }
 
     if (type === "update") {

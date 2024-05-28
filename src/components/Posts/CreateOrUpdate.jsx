@@ -151,27 +151,29 @@ const CreateOrUpdatePostModal = ({
                 setUploadedImages={setUploadedImages}
               />
             </div>
-            <div>
-              <Label className="text-sm font-normal mb-2">Publish On</Label>
+            {type === "create" && (
+              <div>
+                <Label className="text-sm font-normal mb-2">Publish On</Label>
 
-              <Select value={publishOn} onValueChange={setPublishOn}>
-                <SelectTrigger className="w-full mb-2">
-                  <SelectValue placeholder="Now" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="now">Now</SelectItem>
-                  <SelectItem value="later">Later</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select value={publishOn} onValueChange={setPublishOn}>
+                  <SelectTrigger className="w-full mb-2">
+                    <SelectValue placeholder="Now" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="now">Now</SelectItem>
+                    <SelectItem value="later">Later</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              {publishOn === "later" && (
-                <DatePicker
-                  startDate={startDate}
-                  minTime={minTime}
-                  handleDateChange={handleDateChange}
-                />
-              )}
-            </div>
+                {publishOn === "later" && (
+                  <DatePicker
+                    startDate={startDate}
+                    minTime={minTime}
+                    handleDateChange={handleDateChange}
+                  />
+                )}
+              </div>
+            )}
             <div className="space-y-1.5">
               <Button
                 type="submit"

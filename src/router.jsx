@@ -11,6 +11,8 @@ import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import Error404 from "@/pages/errors/Error404";
 import PostDetails from "@/pages/Post/Details";
+import Profiles from "@/pages/Profiles";
+import SingleProfile from "@/pages/Profiles/Single";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: "/posts/:postId",
         element: <PostDetails />,
+      },
+      {
+        path: "/profiles",
+        element: <Profiles />,
+      },
+      {
+        path: "/profiles/:userId",
+        element: <SingleProfile />,
       },
     ],
   },

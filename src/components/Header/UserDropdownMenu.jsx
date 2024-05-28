@@ -8,8 +8,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useSignOut from "@/api/auth/SignOut";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const UserDropdownMenu = () => {
+  const navigate = useNavigate();
+  const authUser = useSelector((state) => state.authUser);
   const { signOutReq, isLoading } = useSignOut();
 
   return (
@@ -17,7 +21,7 @@ const UserDropdownMenu = () => {
       <DropdownMenuTrigger asChild>
         <div className="w-10 h-10 border rounded-full cursor-pointer">
           <img
-            src="https://www.transparentpng.com/thumb/user/gray-user-profile-icon-png-fP8Q1P.png"
+            src={authUser?.profile_image}
             alt="User"
             className="w-full h-full object-contain rounded-full"
           />
@@ -25,7 +29,10 @@ const UserDropdownMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => navigate(`/profiles/${authUser?.id}`)}
+          >
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>

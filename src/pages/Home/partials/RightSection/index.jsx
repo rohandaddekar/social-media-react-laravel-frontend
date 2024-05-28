@@ -12,9 +12,12 @@ const RightSection = () => {
 
   return (
     <>
-      <h2 className="text-lg font-semibold border-b mb-3 pb-2">
-        Suggested for you
-      </h2>
+      <div className="border-b mb-3 pb-2 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Suggested for you</h2>
+        <NavLink to={"/profiles"} className={"text-sm underline"}>
+          View all
+        </NavLink>
+      </div>
       <div className="space-y-3">
         {isLoading ? (
           <p>loading...</p>
@@ -32,7 +35,7 @@ const RightSection = () => {
                 <div className="flex gap-2 justify-between">
                   <div>
                     <NavLink
-                      to={`/profile/${user?.id}`}
+                      to={`/profiles/${user?.id}`}
                       className="text-md font-semibold hover:underline hover:text-blue-600 transition-all ease-in-out"
                     >
                       {user?.first_name} {user?.last_name}

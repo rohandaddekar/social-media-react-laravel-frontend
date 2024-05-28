@@ -162,7 +162,7 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
           <div className="w-full flex justify-between">
             <div>
               <NavLink
-                to={`/profile/${post?.user?.id}`}
+                to={`/profiles/${post?.user?.id}`}
                 className="text-md font-semibold hover:underline hover:text-blue-600 transition-all ease-in-out"
               >
                 {post?.user?.first_name} {post?.user?.last_name}

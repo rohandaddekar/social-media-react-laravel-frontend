@@ -67,10 +67,10 @@ const SingleProfile = () => {
                 <p className="text-gray-500 text-sm mt-1">{data?.about_me}</p>
 
                 <div className="flex items-center gap-4 mt-2">
-                  <p className="border text-sm px-2 py-1 rounded-md">
+                  <p className="border text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50">
                     Followers: <b>16</b>
                   </p>
-                  <p className="border text-sm px-2 py-1 rounded-md">
+                  <p className="border text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50">
                     Followings: <b>38</b>
                   </p>
                 </div>
@@ -101,15 +101,19 @@ const SingleProfile = () => {
             >
               Posts
             </li>
-            <li
-              className={cn([
-                "w-full p-1.5 rounded-md text-center text-sm font-semibold cursor-pointer",
-                selectedTab === "scheduled-posts" ? "bg-white" : "bg-gray-100",
-              ])}
-              onClick={() => setSelectedTab("scheduled-posts")}
-            >
-              Scheduled Posts
-            </li>
+            {authUser?.id === +userId && (
+              <li
+                className={cn([
+                  "w-full p-1.5 rounded-md text-center text-sm font-semibold cursor-pointer",
+                  selectedTab === "scheduled-posts"
+                    ? "bg-white"
+                    : "bg-gray-100",
+                ])}
+                onClick={() => setSelectedTab("scheduled-posts")}
+              >
+                Scheduled Posts
+              </li>
+            )}
           </ul>
 
           <div className="mt-3">{renderPosts()}</div>

@@ -11,6 +11,7 @@ import FollowerOrFollowingModal from "@/components/Users/FollowerOrFollowingModa
 const SingleProfile = () => {
   const { userId } = useParams();
   const authUser = useSelector((state) => state.authUser);
+
   const { data, error, isLoading, showUserReq } = useShowUser();
 
   const [selectedTab, setSelectedTab] = useState("published-posts");
@@ -144,7 +145,6 @@ const SingleProfile = () => {
         open={openFollowerOrFollowingModal}
         setOpen={setOpenFollowerOrFollowingModal}
         type={followerOrFollowingModalType}
-        userId={userId}
       />
     </>
   );

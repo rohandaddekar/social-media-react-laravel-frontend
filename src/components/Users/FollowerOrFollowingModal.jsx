@@ -4,8 +4,23 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import useUserFollowers from "@/api/users/Followers";
+import useUserFollowings from "@/api/users/Followings";
 
-const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
+const FollowerOrFollowingModal = ({ open, setOpen, type }) => {
+  const {
+    data: dataUserFollowers,
+    error: errorUserFollowers,
+    isLoading: isLoadingUserFollowers,
+    userFollowersReq,
+  } = useUserFollowers();
+  const {
+    data: dataUserFollowings,
+    error: errorUserFollowings,
+    isLoading: isLoadingUserFollowings,
+    userFollowingsReq,
+  } = useUserFollowings();
+
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>

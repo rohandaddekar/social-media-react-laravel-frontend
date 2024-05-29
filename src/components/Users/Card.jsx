@@ -1,9 +1,31 @@
 /* eslint-disable react/prop-types */
 
 import { NavLink } from "react-router-dom";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import useUserFollow from "@/api/users/Follow";
 
 const UserCard = ({ user }) => {
+  const { isLoading: isLoadingUserFollow, userFollowReq } = useUserFollow();
+
+  const followUnfollowHandler = () => {
+    switch (user?.follow_status) {
+      case "accepted":
+        // TODO: implement unfollow
+        console.log("// TODO: implement unfollow");
+        break;
+      case "pending":
+        // TODO: implement cancel follow
+        console.log("// TODO: implement cancel follow");
+        break;
+      case "rejected":
+        // TODO: implement reject
+        console.log("// TODO: implement reject");
+        break;
+      default:
+        userFollowReq(user?.id);
+    }
+  };
+
   return (
     <>
       <div className="border rounded-lg">
@@ -40,7 +62,17 @@ const UserCard = ({ user }) => {
             </ul>
           </div>
 
-          <Button className="w-full mt-3">Follow</Button>
+          <Button
+            type="button"
+            className="w-full mt-3"
+            onClick={followUnfollowHandler}
+          >
+            {user?.follow_status === "pending"
+              ? "Request Sent"
+              : user?.follow_status === "accepted"
+              ? "Unfollow"
+              : "Follow"}
+          </Button>
         </div>
       </div>
     </>

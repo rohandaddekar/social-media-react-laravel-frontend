@@ -29,9 +29,12 @@ const useAllPosts = () => {
     [axios]
   );
 
-  const reFetchAllPosts = useCallback(async () => {
-    await allPostsReq();
-  }, [allPostsReq]);
+  const reFetchAllPosts = useCallback(
+    async (query) => {
+      await allPostsReq(query);
+    },
+    [allPostsReq]
+  );
 
   return { data, setData, error, isLoading, allPostsReq, reFetchAllPosts };
 };

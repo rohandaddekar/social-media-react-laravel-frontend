@@ -1,21 +1,41 @@
 import useShowUser from "@/api/users/Show";
-import PostCard from "@/components/Posts/Card";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import PublishedPosts from "@/pages/Profiles/partials/PublishedPosts";
+import ScheduledPosts from "@/pages/Profiles/partials/ScheduledPosts";
 
 const SingleProfile = () => {
   const { userId } = useParams();
   const authUser = useSelector((state) => state.authUser);
-  const { data, error, isLoading, showUserReq, reFetchShowUser } =
-    useShowUser();
+  const { data, error, isLoading, showUserReq } = useShowUser();
+
+  const [selectedTab, setSelectedTab] = useState("published-posts");
+
+  const renderPosts = () => {
+    switch (selectedTab) {
+      case "published-posts":
+        return (
+          <PublishedPosts userId={userId} setSelectedTab={setSelectedTab} />
+        );
+
+      case "scheduled-posts":
+        return (
+          <ScheduledPosts userId={userId} setSelectedTab={setSelectedTab} />
+        );
+
+      default:
+        return (
+          <PublishedPosts userId={userId} setSelectedTab={setSelectedTab} />
+        );
+    }
+  };
 
   useEffect(() => {
     showUserReq(userId);
   }, [userId]);
-
-  console.log("data: ", data);
 
   return (
     <>
@@ -56,37 +76,43 @@ const SingleProfile = () => {
                 </div>
               </div>
 
-              {authUser?.id !== data?.id && (
+              {authUser?.id !== data?.id ? (
                 <div className="flex items-center gap-4">
                   <Button variant="outline" className="w-32">
                     Message
                   </Button>
                   <Button className="w-32">Follow</Button>
                 </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Button className="w-32">Edit Profile</Button>
+                </div>
               )}
             </div>
           </div>
 
-          <div className="border rounded-lg mt-5 p-5">
-            <h2 className="text-lg font-semibold border-b pb-3 mb-3">Posts</h2>
+          <ul className="flex items-center gap-3 bg-gray-100 p-1 mt-5 rounded-md">
+            <li
+              className={cn([
+                "w-full p-1.5 rounded-md text-center text-sm font-semibold cursor-pointer",
+                selectedTab === "published-posts" ? "bg-white" : "bg-gray-100",
+              ])}
+              onClick={() => setSelectedTab("published-posts")}
+            >
+              Posts
+            </li>
+            <li
+              className={cn([
+                "w-full p-1.5 rounded-md text-center text-sm font-semibold cursor-pointer",
+                selectedTab === "scheduled-posts" ? "bg-white" : "bg-gray-100",
+              ])}
+              onClick={() => setSelectedTab("scheduled-posts")}
+            >
+              Scheduled Posts
+            </li>
+          </ul>
 
-            <ul className="space-y-3">
-              {data?.posts?.length > 0 ? (
-                data?.posts?.map((post, i) => (
-                  <li key={i}>
-                    <PostCard
-                      post={post}
-                      setReFetch={() => reFetchShowUser(userId)}
-                    />
-                  </li>
-                ))
-              ) : (
-                <li className="bg-gray-50 rounded-md p-3 text-center">
-                  no post yet...
-                </li>
-              )}
-            </ul>
-          </div>
+          <div className="mt-3">{renderPosts()}</div>
         </div>
       )}
     </>

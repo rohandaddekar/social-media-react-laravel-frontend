@@ -92,6 +92,13 @@ const CreateOrUpdatePostModal = ({
     if (type === "update" && postId && showData) {
       setContent(showData?.content);
       setUploadedImages(showData?.images);
+
+      if (
+        showData?.publish_at > moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
+      ) {
+        setPublishOn("later");
+        setStartDate(new Date(showData?.publish_at));
+      }
     }
   }, [showData, type, postId]);
 
@@ -151,7 +158,10 @@ const CreateOrUpdatePostModal = ({
                 setUploadedImages={setUploadedImages}
               />
             </div>
-            {type === "create" && (
+            {((type === "update" &&
+              showData?.publish_at >
+                moment(new Date()).format("YYYY-MM-DD HH:mm:ss")) ||
+              type === "create") && (
               <div>
                 <Label className="text-sm font-normal mb-2">Publish On</Label>
 

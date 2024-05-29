@@ -102,7 +102,7 @@ const renderImages = (images) => {
   }
 };
 
-const PostCard = ({ post, redirect = true, setReFetch }) => {
+const PostCard = ({ post, redirect = true, setReFetch, scheduled }) => {
   const navigate = useNavigate();
   const { likeUnlikePostReq, data: dataLikeUnlikePost } = useLikeUnlikePost();
   const {
@@ -173,7 +173,10 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
                   : post?.user?.about_me}
               </p>
               <p className="text-gray-500 text-xs mt-1">
-                {moment(post?.publish_at).fromNow()}
+                {post?.publish_at <=
+                moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
+                  ? moment(post?.publish_at).fromNow()
+                  : "scheduled at " + moment(post?.publish_at).format("LLL")}
               </p>
             </div>
 
@@ -243,45 +246,47 @@ const PostCard = ({ post, redirect = true, setReFetch }) => {
           {renderImages(post?.images)}
         </div>
 
-        <div className="px-5 mt-3">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-400">
-              {post?.likes?.length > 100 ? "100+" : post?.likes?.length} likes
-            </p>
-            <p className="text-sm text-gray-400">
-              {post?.comments?.length > 100 ? "100+" : post?.comments?.length}{" "}
-              comments
-            </p>
+        {!scheduled && (
+          <div className="px-5 mt-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-400">
+                {post?.likes?.length > 100 ? "100+" : post?.likes?.length} likes
+              </p>
+              <p className="text-sm text-gray-400">
+                {post?.comments?.length > 100 ? "100+" : post?.comments?.length}{" "}
+                comments
+              </p>
+            </div>
+            <div className="border-t grid grid-cols-3 gap-x-5 pt-4">
+              <p
+                className={cn([
+                  "flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out",
+                  post?.is_liked ? "text-blue-600" : "text-gray-500",
+                ])}
+                onClick={() => likeUnlikePostReq(post?.id)}
+              >
+                <ThumbsUp className="w-4 h-4 mr-1" />
+                Like
+              </p>
+              <p
+                className="flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out"
+                onClick={() => setShowComment(!showComment)}
+              >
+                <MessageCircleMore className="w-4 h-4 mr-1" />
+                Comment
+              </p>
+              <p
+                className="flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out"
+                onClick={() => setOpenPostShareModal(true)}
+              >
+                <Send className="w-4 h-4 mr-1" />
+                Share
+              </p>
+            </div>
           </div>
-          <div className="border-t grid grid-cols-3 gap-x-5 pt-4">
-            <p
-              className={cn([
-                "flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out",
-                post?.is_liked ? "text-blue-600" : "text-gray-500",
-              ])}
-              onClick={() => likeUnlikePostReq(post?.id)}
-            >
-              <ThumbsUp className="w-4 h-4 mr-1" />
-              Like
-            </p>
-            <p
-              className="flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out"
-              onClick={() => setShowComment(!showComment)}
-            >
-              <MessageCircleMore className="w-4 h-4 mr-1" />
-              Comment
-            </p>
-            <p
-              className="flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out"
-              onClick={() => setOpenPostShareModal(true)}
-            >
-              <Send className="w-4 h-4 mr-1" />
-              Share
-            </p>
-          </div>
-        </div>
+        )}
 
-        {showComment && (
+        {showComment && !scheduled && (
           <CommentCard
             comments={post?.comments}
             postId={post?.id}

@@ -11,12 +11,12 @@ const useUserAcceptFollow = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const userAcceptFollowReq = async (payload, userId) => {
+  const userAcceptFollowReq = async (userId) => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        `/users/accept-follow/${userId}`,
-        payload,
+        `/users/follow/accept/${userId}`,
+        {},
         authHeaders
       );
       console.log("user accept follow res: ", res?.data?.data);

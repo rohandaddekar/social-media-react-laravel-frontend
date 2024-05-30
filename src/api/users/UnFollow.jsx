@@ -15,7 +15,7 @@ const useUserUnFollow = () => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        `/users/unfollow/${userId}`,
+        `/users/follow/cancel-or-unfollow/${userId}`,
         {},
         authHeaders
       );

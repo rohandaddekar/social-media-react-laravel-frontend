@@ -6,25 +6,48 @@ import { useSelector } from "react-redux";
 
 const Profiles = () => {
   const authUser = useSelector((state) => state.authUser);
-  const { allUsersReq, data, error, isLoading, reFetchAllUsers } =
+  const { allUsersReq, data, setData, error, isLoading, reFetchAllUsers } =
     useAllUsers();
+
+  const updateFollowStatus = (userId, status) => {
+    setData((prev) => {
+      return prev.map((user) => {
+        if (user.id === userId) {
+          return { ...user, follow_status: status };
+        } else {
+          return user;
+        }
+      });
+    });
+  };
 
   useEffect(() => {
     allUsersReq();
   }, []);
 
   useEffect(() => {
-    const listner = pvtEventListner(authUser?.token);
-    listner
+    const listener = pvtEventListner(authUser?.token);
+    listener
       .private(`user-follow-status.${authUser.id}`)
       .listen("UserFollowStatusEvent", (e) => {
         console.log("user follow status event: ", e);
+
+        const { sender_follow_status, receiver_follow_status } = e.followStatus;
+        const followReq = e.followReq;
+
+        if (followReq.sender_id === authUser.id) {
+          updateFollowStatus(followReq.receiver_id, sender_follow_status);
+        } else if (followReq.receiver_id === authUser.id) {
+          updateFollowStatus(followReq.sender_id, receiver_follow_status);
+        }
       });
 
     return () => {
-      listner.leave(`user-follow-status.${authUser.id}`);
+      listener.leave(`user-follow-status.${authUser.id}`);
     };
-  }, []);
+  }, [authUser, data]);
+
+  console.log("data: ", data);
 
   return (
     <>

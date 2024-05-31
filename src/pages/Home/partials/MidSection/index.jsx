@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import useAllPosts from "@/api/posts/All";
-import { laravelEcho } from "@/lib/laravelEcho.config";
 import PostCard from "@/components/Posts/Card";
 import Stories from "@/components/Stories";
+import { publicEventListner } from "@/lib/laravelEcho.config";
 
 const MidSection = () => {
   const { allPostsReq, data, setData, isLoading, reFetchAllPosts } =
@@ -25,20 +25,22 @@ const MidSection = () => {
   }, [reFetch]);
 
   useEffect(() => {
-    laravelEcho.channel("post-channel").listen("PostEvent", (e) => {
-      setData((prev) => {
-        const parsedImages = JSON.parse(e.post.images);
+    publicEventListner()
+      .channel("post-channel")
+      .listen("PostEvent", (e) => {
+        setData((prev) => {
+          const parsedImages = JSON.parse(e.post.images);
 
-        console.log("e.post: ", e.post);
-        return {
-          ...prev,
-          data: [{ ...e.post, images: parsedImages }, ...prev.data],
-        };
+          console.log("e.post: ", e.post);
+          return {
+            ...prev,
+            data: [{ ...e.post, images: parsedImages }, ...prev.data],
+          };
+        });
       });
-    });
 
     return () => {
-      laravelEcho.leave("post-channel");
+      publicEventListner().leave("post-channel");
     };
   }, []);
 

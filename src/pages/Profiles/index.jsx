@@ -1,13 +1,29 @@
 import useAllUsers from "@/api/users/All";
 import UserCard from "@/components/Users/Card";
+import { pvtEventListner } from "@/lib/laravelEcho.config";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Profiles = () => {
+  const authUser = useSelector((state) => state.authUser);
   const { allUsersReq, data, error, isLoading, reFetchAllUsers } =
     useAllUsers();
 
   useEffect(() => {
     allUsersReq();
+  }, []);
+
+  useEffect(() => {
+    const listner = pvtEventListner(authUser?.token);
+    listner
+      .private(`user-follow-status.${authUser.id}`)
+      .listen("UserFollowStatusEvent", (e) => {
+        console.log("user follow status event: ", e);
+      });
+
+    return () => {
+      listner.leave(`user-follow-status.${authUser.id}`);
+    };
   }, []);
 
   return (

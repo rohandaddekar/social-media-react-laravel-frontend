@@ -1,9 +1,9 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signIn } from "@/redux/slices/user";
+import { toast } from "@/components/ui/use-toast";
 
 const useSignUp = () => {
   const axios = useAxios();
@@ -20,7 +20,9 @@ const useSignUp = () => {
       const res = await axios.post("/auth/sign-up", payload);
       console.log("sign up res: ", res?.data?.data);
 
-      toast.success(res?.data?.message || "Signed up successfully");
+      toast({
+        title: res?.data?.message || "Signed up successfully",
+      });
 
       const isEmailVerified = res?.data?.data?.user?.email_verified_at;
       if (!isEmailVerified) {
@@ -45,7 +47,10 @@ const useSignUp = () => {
       navigate("/");
     } catch (error) {
       console.error("failed to sign up: ", error);
-      toast.error(error?.response?.data?.message || "Failed to sign up");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to sign up",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

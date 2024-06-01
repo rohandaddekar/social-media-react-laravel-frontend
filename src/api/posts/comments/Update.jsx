@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
 import useAuthHeaders from "@/api/authHeaders";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/use-toast";
 
 const useUpdatePostComment = () => {
   const axios = useAxios();
@@ -19,11 +19,16 @@ const useUpdatePostComment = () => {
         payload,
         authHeaders
       );
-      toast.success(res?.data?.message || "Comment updated successfully");
+      toast({
+        title: res?.data?.message || "Comment updated successfully",
+      });
       setData(res?.data?.data);
     } catch (error) {
       console.log("failed to update comment: ", error);
-      toast.error(error?.response?.data?.message || "Failed to update comment");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to update comment",
+      });
       setError(error);
     } finally {
       setIsLoading(false);

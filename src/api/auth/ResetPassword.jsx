@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 const useResetPassword = () => {
   const axios = useAxios();
@@ -16,12 +16,18 @@ const useResetPassword = () => {
       setIsLoading(true);
       const res = await axios.post("/auth/reset-password", payload);
       console.log("reset password res: ", res?.data?.data);
-      toast.success(res?.data?.message || "Password resetd successfully");
+      toast({
+        variant: "destructive",
+        title: res?.data?.message || "Password resetd successfully",
+      });
       setData(res?.data);
       navigate("/sign-in");
     } catch (error) {
       console.error("failed to reset password: ", error);
-      toast.error(error?.response?.data?.message || "Failed to reset password");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to reset password",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
 import useAuthHeaders from "@/api/authHeaders";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/use-toast";
 
 const useUpdatePost = () => {
   const axios = useAxios();
@@ -14,23 +14,23 @@ const useUpdatePost = () => {
   const updatePostReq = async (payload, id) => {
     try {
       setIsLoading(true);
-      const res = await axios.post(
-        `/posts/${id}`,
-        payload,
-        // authHeaders
-        {
-          ...authHeaders,
-          headers: {
-            ...authHeaders.headers,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      toast.success(res?.data?.message || "post updated successfully");
+      const res = await axios.post(`/posts/${id}`, payload, {
+        ...authHeaders,
+        headers: {
+          ...authHeaders.headers,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast({
+        title: res?.data?.message || "post updated successfully",
+      });
       setData(res?.data?.data);
     } catch (error) {
       console.log("failed to update post: ", error);
-      toast.error(error?.response?.data?.message || "Failed to update post");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to update post",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

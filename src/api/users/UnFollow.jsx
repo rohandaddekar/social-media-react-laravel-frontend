@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import useAuthHeaders from "@/api/authHeaders";
+import { toast } from "@/components/ui/use-toast";
 
 const useUserUnFollow = () => {
   const axios = useAxios();
@@ -20,11 +20,16 @@ const useUserUnFollow = () => {
         authHeaders
       );
       console.log("user unfollow res: ", res?.data?.data);
-      toast.success(res?.data?.message || "Unfollowed successfully");
+      toast({
+        title: res?.data?.message || "Unfollowed successfully",
+      });
       setData(res?.data);
     } catch (error) {
       console.error("failed to unfollow user: ", error);
-      toast.error(error?.response?.data?.message || "Failed to unfollow");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to unfollow",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

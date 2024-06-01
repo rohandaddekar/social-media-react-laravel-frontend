@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import useAuthHeaders from "@/api/authHeaders";
+import { toast } from "@/components/ui/use-toast";
 
 const useUserRejectFollow = () => {
   const axios = useAxios();
@@ -20,15 +20,17 @@ const useUserRejectFollow = () => {
         authHeaders
       );
       console.log("user reject follow res: ", res?.data?.data);
-      toast.success(
-        res?.data?.message || "follow request rejected successfully"
-      );
+      toast({
+        title: res?.data?.message || "follow request rejected successfully",
+      });
       setData(res?.data);
     } catch (error) {
       console.error("failed to reject follow: ", error);
-      toast.error(
-        error?.response?.data?.message || "Failed to reject follow request"
-      );
+      toast({
+        variant: "destructive",
+        title:
+          error?.response?.data?.message || "Failed to reject follow request",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

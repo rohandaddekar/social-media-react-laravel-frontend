@@ -1,9 +1,9 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signIn } from "@/redux/slices/user";
+import { toast } from "@/components/ui/use-toast";
 
 const useSignIn = () => {
   const axios = useAxios();
@@ -22,12 +22,17 @@ const useSignIn = () => {
 
       const isEmailVerified = res?.data?.data?.user?.email_verified_at;
       if (!isEmailVerified) {
-        toast.error("Please verify your email");
+        toast({
+          variant: "destructive",
+          title: "Please verify your email",
+        });
         navigate(`/verify-email?email=${res?.data?.data?.user?.email}`);
         return;
       }
 
-      toast.success(res?.data?.message || "Signed in successfully");
+      toast({
+        title: res?.data?.message || "Signed in successfully",
+      });
       setData(res?.data);
       dispatch(
         signIn({
@@ -46,7 +51,10 @@ const useSignIn = () => {
       navigate("/");
     } catch (error) {
       console.error("failed to sign in: ", error);
-      toast.error(error?.response?.data?.message || "Failed to sign in");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to sign in",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

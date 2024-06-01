@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import useAuthHeaders from "@/api/authHeaders";
+import { toast } from "@/components/ui/use-toast";
 
 const useUserFollowings = () => {
   const axios = useAxios();
@@ -16,13 +16,16 @@ const useUserFollowings = () => {
       setIsLoading(true);
       const res = await axios.get(`/users/followings/${userId}`, authHeaders);
       console.log("user followings res: ", res?.data?.data);
-      toast.success(res?.data?.message || "Successfully fetched followings");
+      toast({
+        title: res?.data?.message || "Successfully fetched followings",
+      });
       setData(res?.data);
     } catch (error) {
       console.error("failed to fetch followings: ", error);
-      toast.error(
-        error?.response?.data?.message || "Failed to fetch followings"
-      );
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to fetch followings",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

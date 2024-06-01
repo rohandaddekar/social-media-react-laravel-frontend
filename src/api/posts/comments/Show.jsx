@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import useAxios from "@/api/axiosInstance";
 import useAuthHeaders from "@/api/authHeaders";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/use-toast";
 
 const useShowPostComment = () => {
   const axios = useAxios();
@@ -19,9 +19,10 @@ const useShowPostComment = () => {
         setData(res?.data?.data);
       } catch (error) {
         console.log("failed to fetch post comment: ", error);
-        toast.error(
-          error?.response?.data?.message || "Failed to fetch comment"
-        );
+        toast({
+          variant: "destructive",
+          title: error?.response?.data?.message || "Failed to fetch comment",
+        });
         setError(error);
       } finally {
         setIsLoading(false);

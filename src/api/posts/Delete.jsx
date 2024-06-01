@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import useAuthHeaders from "@/api/authHeaders";
+import { toast } from "@/components/ui/use-toast";
 
 const useDeletePost = () => {
   const axios = useAxios();
@@ -16,11 +16,16 @@ const useDeletePost = () => {
       setIsLoading(true);
       const res = await axios.delete(`/posts/${postId}`, authHeaders);
       console.log("delete post res: ", res?.data?.data);
-      toast.success(res?.data?.message || "Post deleted successfully");
+      toast({
+        title: res?.data?.message || "Post deleted successfully",
+      });
       setData(res?.data);
     } catch (error) {
       console.error("failed to delete post: ", error);
-      toast.error(error?.response?.data?.message || "Failed to delete post");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to delete post",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import useAuthHeaders from "@/api/authHeaders";
+import { toast } from "@/components/ui/use-toast";
 
 const useDeletePostComment = () => {
   const axios = useAxios();
@@ -19,11 +19,16 @@ const useDeletePostComment = () => {
         authHeaders
       );
       console.log("delete Comment res: ", res?.data?.data);
-      toast.success(res?.data?.message || "Comment deleted successfully");
+      toast({
+        title: res?.data?.message || "Comment deleted successfully",
+      });
       setData(res?.data);
     } catch (error) {
       console.error("failed to delete Comment: ", error);
-      toast.error(error?.response?.data?.message || "Failed to delete Comment");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to delete Comment",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

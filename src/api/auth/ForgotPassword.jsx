@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/use-toast";
 
 const useForgotPassword = () => {
   const axios = useAxios();
@@ -14,13 +14,16 @@ const useForgotPassword = () => {
       setIsLoading(true);
       const res = await axios.post("/auth/forgot-password", payload);
       console.log("forgot password res: ", res?.data?.data);
-      toast.success(res?.data?.message || "Reset link send successfully");
+      toast({
+        title: res?.data?.message || "Reset link send successfully",
+      });
       setData(res?.data);
     } catch (error) {
       console.error("failed to forgot password: ", error);
-      toast.error(
-        error?.response?.data?.message || "Failed to send reset link"
-      );
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to send reset link",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

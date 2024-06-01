@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 const useVerifyEmail = () => {
   const axios = useAxios();
@@ -16,12 +16,17 @@ const useVerifyEmail = () => {
       setIsLoading(true);
       const res = await axios.post("/auth/verify-email", payload);
       console.log("verify email res: ", res?.data?.data);
-      toast.success(res?.data?.message || "email verified successfully");
+      toast({
+        title: res?.data?.message || "email verified successfully",
+      });
       setData(res?.data);
       navigate("/sign-in");
     } catch (error) {
       console.error("failed to verify email: ", error);
-      toast.error(error?.response?.data?.message || "Failed to verify email");
+      toast({
+        title: error?.response?.data?.message || "Failed to verify email",
+        variant: "destructive",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxios from "@/api/axiosInstance";
-import toast from "react-hot-toast";
 import useAuthHeaders from "@/api/authHeaders";
+import { toast } from "@/components/ui/use-toast";
 
 const useUserRemoveFollow = () => {
   const axios = useAxios();
@@ -20,15 +20,17 @@ const useUserRemoveFollow = () => {
         authHeaders
       );
       console.log("user remove follow res: ", res?.data?.data);
-      toast.success(
-        res?.data?.message || "follow request removeed successfully"
-      );
+      toast({
+        title: res?.data?.message || "follow request removeed successfully",
+      });
       setData(res?.data);
     } catch (error) {
       console.error("failed to remove follow: ", error);
-      toast.error(
-        error?.response?.data?.message || "Failed to remove follow request"
-      );
+      toast({
+        variant: "destructive",
+        title:
+          error?.response?.data?.message || "Failed to remove follow request",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

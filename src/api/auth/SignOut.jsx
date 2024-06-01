@@ -1,10 +1,10 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import useAxios from "@/api/axiosInstance";
 import { signOut } from "@/redux/slices/user";
 import { useNavigate } from "react-router-dom";
 import useAuthHeaders from "@/api/authHeaders";
+import { toast } from "@/components/ui/use-toast";
 
 const useSignOut = () => {
   const axios = useAxios();
@@ -20,14 +20,19 @@ const useSignOut = () => {
     try {
       setIsLoading(true);
       const res = await axios.get("/auth/sign-out", authHeaders);
-      toast.success(res?.data?.message || "Signed out successfully");
+      toast({
+        title: res?.data?.message || "Signed out successfully",
+      });
       console.log("signed out res: ", res?.data?.data);
       setData(res?.data);
       dispatch(signOut());
       navigate("/");
     } catch (error) {
       console.error("failed to sign out: ", error);
-      toast.error(error?.response?.data?.message || "Failed to sign out");
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Failed to sign out",
+      });
       setError(error?.response?.data);
     } finally {
       setIsLoading(false);

@@ -5,9 +5,23 @@ import router from "./router.jsx";
 import store from "@/redux/store";
 import { Provider } from "react-redux";
 import ReactDOM from "react-dom/client";
-import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
+import { Toaster } from "@/components/ui/toaster";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <main>
+          {children}
+          <Toaster />
+        </main>
+      </body>
+    </html>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

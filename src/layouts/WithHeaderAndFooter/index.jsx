@@ -9,11 +9,11 @@ import { toast } from "@/components/ui/use-toast";
 const Index = () => {
   const authUser = useSelector((state) => state.authUser);
 
-  if (!authUser) {
-    return <Navigate to="/sign-in" />;
-  }
-
   useEffect(() => {
+    if (!authUser) {
+      return;
+    }
+
     const listener = pvtEventListner(authUser?.token);
     listener
       .private(`notification.${authUser.id}`)
@@ -29,6 +29,10 @@ const Index = () => {
       listener.leave(`user-follow-status.${authUser.id}`);
     };
   }, []);
+
+  if (!authUser) {
+    return <Navigate to="/sign-in" />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">

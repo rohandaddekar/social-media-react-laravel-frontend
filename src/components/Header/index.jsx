@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import useCreatePost from "@/api/posts/Create";
 import useAllNotifications from "@/api/notifications/All";
 import Notification from "../Notification";
+import { pvtEventListner } from "@/lib/laravelEcho.config";
+import { toast } from "@/components/ui/use-toast";
 
 const Header = () => {
   const authUser = useSelector((state) => state.authUser);
@@ -21,16 +23,41 @@ const Header = () => {
   } = useCreatePost();
   const {
     data: dataAllNotifications,
+    setData: setDataAllNotifications,
     error: errorAllNotifications,
     isLoading: isLoadingAllNotifications,
     allNotificationsReq,
-    reFetch: reFetchAllNotifications,
   } = useAllNotifications();
 
   const [openPostCreateModal, setOpenPostCreateModal] = useState(false);
 
   useEffect(() => {
     allNotificationsReq();
+  }, []);
+
+  useEffect(() => {
+    if (!authUser) {
+      return;
+    }
+
+    const listener = pvtEventListner(authUser?.token);
+    listener
+      .private(`notification.${authUser.id}`)
+      .listen("NotificationEvent", (e) => {
+        console.log("notification event: ", e);
+        if (authUser?.id === e.notification.user_id) {
+          setDataAllNotifications((prev) => {
+            return [...prev, e.notification];
+          });
+          toast({
+            title: e.notification.data.message,
+          });
+        }
+      });
+
+    return () => {
+      listener.leave(`user-follow-status.${authUser.id}`);
+    };
   }, []);
 
   return (

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import useAxios from "@/api/axiosInstance";
 import useAuthHeaders from "@/api/authHeaders";
 
-const useAllNotifications = () => {
+const useMarkAllNotificationAsRead = () => {
   const axios = useAxios();
   const authHeaders = useAuthHeaders();
 
@@ -10,10 +10,13 @@ const useAllNotifications = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const allNotificationsReq = useCallback(async () => {
+  const markAllNotificationAsReadReq = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get(`/notifications`, authHeaders);
+      const res = await axios.get(
+        `/notifications/mark-all-as-read`,
+        authHeaders
+      );
       // console.log("fetch all notifications res: ", res);
       setData(res?.data?.data);
     } catch (error) {
@@ -24,11 +27,7 @@ const useAllNotifications = () => {
     }
   }, [axios, authHeaders]);
 
-  const reFetch = useCallback(async () => {
-    await allNotificationsReq();
-  }, [allNotificationsReq]);
-
-  return { data, setData, error, isLoading, allNotificationsReq, reFetch };
+  return { data, error, isLoading, markAllNotificationAsReadReq };
 };
 
-export default useAllNotifications;
+export default useMarkAllNotificationAsRead;

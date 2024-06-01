@@ -45,9 +45,7 @@ const Profiles = () => {
     return () => {
       listener.leave(`user-follow-status.${authUser.id}`);
     };
-  }, [authUser, data]);
-
-  console.log("data: ", data);
+  }, []);
 
   return (
     <>

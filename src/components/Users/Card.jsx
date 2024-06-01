@@ -64,24 +64,6 @@ const UserCard = ({ user, reFetch }) => {
     console.log("remove follow req");
   };
 
-  // useEffect(() => {
-  //   if (
-  //     dataUserFollow ||
-  //     dataUserUnFollow ||
-  //     dataUserAcceptFollow ||
-  //     dataUserRejectFollow ||
-  //     dataUserRemoveFollow
-  //   ) {
-  //     reFetch();
-  //   }
-  // }, [
-  //   dataUserFollow,
-  //   dataUserUnFollow,
-  //   dataUserAcceptFollow,
-  //   dataUserRejectFollow,
-  //   dataUserRemoveFollow,
-  // ]);
-
   return (
     <>
       <div className="border rounded-lg">

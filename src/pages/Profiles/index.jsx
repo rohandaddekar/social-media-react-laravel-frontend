@@ -6,8 +6,7 @@ import { useSelector } from "react-redux";
 
 const Profiles = () => {
   const authUser = useSelector((state) => state.authUser);
-  const { allUsersReq, data, setData, error, isLoading, reFetchAllUsers } =
-    useAllUsers();
+  const { allUsersReq, data, setData, error, isLoading } = useAllUsers();
 
   const updateFollowStatus = (userId, status) => {
     setData((prev) => {
@@ -56,9 +55,7 @@ const Profiles = () => {
           ) : error ? (
             <p>failed to load</p>
           ) : data?.length > 0 ? (
-            data?.map((user, i) => (
-              <UserCard key={i} user={user} reFetch={reFetchAllUsers} />
-            ))
+            data?.map((user, i) => <UserCard key={i} user={user} />)
           ) : (
             <p>No users found</p>
           )}

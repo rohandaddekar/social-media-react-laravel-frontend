@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import useMarkAllNotificationAsRead from "@/api/notifications/MarkAllAsRead";
+import useAllNotifications from "@/api/notifications/All";
 import useMarkNotificationAsRead from "@/api/notifications/MarkAsRead";
 import {
   DropdownMenu,
@@ -9,15 +9,60 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { pvtEventListner } from "@/lib/laravelEcho.config";
+import { Bell } from "lucide-react";
 import moment from "moment";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
-const Notification = ({ trigger, data, isLoading, error }) => {
+const Notification = () => {
   const navigate = useNavigate();
+  const authUser = useSelector((state) => state.authUser);
+  const {
+    data: dataAllNotifications,
+    setData: setDataAllNotifications,
+    error: errorAllNotifications,
+    isLoading: isLoadingAllNotifications,
+    allNotificationsReq,
+  } = useAllNotifications();
   const { markNotificationAsReadReq } = useMarkNotificationAsRead();
-  const { markAllNotificationAsReadReq } = useMarkAllNotificationAsRead();
 
-  console.log("notification data: ", data);
+  useEffect(() => {
+    allNotificationsReq();
+  }, []);
+
+  useEffect(() => {
+    const listener = pvtEventListner(authUser?.token);
+    listener
+      .private(`notification.${authUser.id}`)
+      .listen("NotificationEvent", (e) => {
+        console.log("notification event: ", e);
+        if (authUser?.id === e.notification.user_id) {
+          setDataAllNotifications((prev) => {
+            return [...prev, e.notification];
+          });
+          toast({
+            title: e.notification.data.message,
+          });
+        }
+      });
+
+    return () => {
+      listener.leave(`user-follow-status.${authUser.id}`);
+    };
+  }, []);
+
+  const getNotificationCount = () => {
+    const isNotReadNotifications = dataAllNotifications?.filter(
+      (notification) => {
+        return notification.is_read === 0;
+      }
+    );
+
+    return isNotReadNotifications?.length;
+  };
 
   const navigationHandler = (type, userId, id, is_read) => {
     switch (type) {
@@ -32,15 +77,20 @@ const Notification = ({ trigger, data, isLoading, error }) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
+        <li className="cursor-pointer relative">
+          <Bell className="w-7 h-7" />
+          <span className="absolute border-2 border-gray-300 -top-2 -right-2 text-xs text-white rounded-full w-6 h-6 flex items-center justify-center bg-green-800">
+            {getNotificationCount() > 10 ? "9+" : getNotificationCount()}
+          </span>
+        </li>
+      </DropdownMenuTrigger>
       <DropdownMenuContent className="max-w-md p-0">
         <DropdownMenuLabel>
           <div className="flex items-center justify-between px-2 py-1">
-            <p
-              className="flex items-center gap-2"
-              onClick={() => markAllNotificationAsReadReq()}
-            >
-              Notifications : <b className="mt-0.5">{data?.length}</b>
+            <p className="flex items-center gap-2">
+              Notifications :{" "}
+              <b className="mt-0.5">{dataAllNotifications?.length}</b>
             </p>
             <NavLink to={"/notifications"} className={"text-xs text-end"}>
               View all
@@ -49,15 +99,15 @@ const Notification = ({ trigger, data, isLoading, error }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="mb-0" />
         <ul className="">
-          {isLoading ? (
+          {isLoadingAllNotifications ? (
             <li className="text-sm">loading...</li>
-          ) : error ? (
+          ) : errorAllNotifications ? (
             <li className="text-sm">failed to load</li>
-          ) : data?.length > 0 ? (
-            data?.slice(0, 5)?.map((notification, i) => (
+          ) : dataAllNotifications?.length > 0 ? (
+            dataAllNotifications?.slice(0, 5)?.map((notification, i) => (
               <li
                 key={i}
-                className={`text-sm p-3 cursor-pointer flex gap-3 border-b ${
+                className={`text-sm p-3 cursor-pointer flex gap-3 border-b hover:bg-gray-100 ${
                   notification?.is_read === 0 ? "bg-gray-100" : "bg-white"
                 }`}
                 onClick={() =>

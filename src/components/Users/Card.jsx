@@ -7,35 +7,18 @@ import useUserUnFollow from "@/api/users/UnFollow";
 import { Loader2 } from "lucide-react";
 import useUserAcceptFollow from "@/api/users/AcceptFollow";
 import useUserRejectFollow from "@/api/users/RejectFollow";
-import { useEffect } from "react";
 import useUserRemoveFollow from "@/api/users/RemoveFollow";
 
-const UserCard = ({ user, reFetch }) => {
-  const {
-    isLoading: isLoadingUserFollow,
-    data: dataUserFollow,
-    userFollowReq,
-  } = useUserFollow();
-  const {
-    isLoading: isLoadingUserAcceptFollow,
-    data: dataUserAcceptFollow,
-    userAcceptFollowReq,
-  } = useUserAcceptFollow();
-  const {
-    isLoading: isLoadingUserRejectFollow,
-    data: dataUserRejectFollow,
-    userRejectFollowReq,
-  } = useUserRejectFollow();
-  const {
-    isLoading: isLoadingUserRemoveFollow,
-    data: dataUserRemoveFollow,
-    userRemoveFollowReq,
-  } = useUserRemoveFollow();
-  const {
-    isLoading: isLoadingUserUnFollow,
-    data: dataUserUnFollow,
-    userUnFollowReq,
-  } = useUserUnFollow();
+const UserCard = ({ user }) => {
+  const { isLoading: isLoadingUserFollow, userFollowReq } = useUserFollow();
+  const { isLoading: isLoadingUserAcceptFollow, userAcceptFollowReq } =
+    useUserAcceptFollow();
+  const { isLoading: isLoadingUserRejectFollow, userRejectFollowReq } =
+    useUserRejectFollow();
+  const { isLoading: isLoadingUserRemoveFollow, userRemoveFollowReq } =
+    useUserRemoveFollow();
+  const { isLoading: isLoadingUserUnFollow, userUnFollowReq } =
+    useUserUnFollow();
 
   const followHandler = (id) => {
     userFollowReq(id);
@@ -136,7 +119,7 @@ const UserCard = ({ user, reFetch }) => {
               onClick={() => removeFollowHandler(user?.id)}
             >
               Remove
-              {isLoadingUserUnFollow && (
+              {isLoadingUserRemoveFollow && (
                 <Loader2 className="ml-2 h-4 w-4 animate-spin" />
               )}
             </Button>

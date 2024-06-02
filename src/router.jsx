@@ -13,6 +13,7 @@ import Error404 from "@/pages/errors/Error404";
 import PostDetails from "@/pages/Post/Details";
 import Profiles from "@/pages/Profiles";
 import SingleProfile from "@/pages/Profiles/Single";
+import Notifications from "@/pages/Notifications";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/profiles/:userId",
         element: <SingleProfile />,
+      },
+      {
+        path: "/notifications",
+        element: <Notifications />,
       },
     ],
   },

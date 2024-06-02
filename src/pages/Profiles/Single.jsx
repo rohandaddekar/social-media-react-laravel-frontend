@@ -7,18 +7,67 @@ import { cn } from "@/lib/utils";
 import PublishedPosts from "@/pages/Profiles/partials/PublishedPosts";
 import ScheduledPosts from "@/pages/Profiles/partials/ScheduledPosts";
 import FollowerOrFollowingModal from "@/components/Users/FollowerOrFollowingModal";
+import { Loader2 } from "lucide-react";
+import useUserFollow from "@/api/users/Follow";
+import useUserAcceptFollow from "@/api/users/AcceptFollow";
+import useUserRejectFollow from "@/api/users/RejectFollow";
+import useUserRemoveFollow from "@/api/users/RemoveFollow";
+import useUserUnFollow from "@/api/users/UnFollow";
+import { pvtEventListner } from "@/lib/laravelEcho.config";
 
 const SingleProfile = () => {
   const { userId } = useParams();
   const authUser = useSelector((state) => state.authUser);
 
-  const { data, error, isLoading, showUserReq } = useShowUser();
+  const { data, setData, error, isLoading, showUserReq } = useShowUser();
+  const { isLoading: isLoadingUserFollow, userFollowReq } = useUserFollow();
+  const { isLoading: isLoadingUserAcceptFollow, userAcceptFollowReq } =
+    useUserAcceptFollow();
+  const { isLoading: isLoadingUserRejectFollow, userRejectFollowReq } =
+    useUserRejectFollow();
+  const { isLoading: isLoadingUserRemoveFollow, userRemoveFollowReq } =
+    useUserRemoveFollow();
+  const { isLoading: isLoadingUserUnFollow, userUnFollowReq } =
+    useUserUnFollow();
 
   const [selectedTab, setSelectedTab] = useState("published-posts");
   const [openFollowerOrFollowingModal, setOpenFollowerOrFollowingModal] =
     useState(false);
   const [followerOrFollowingModalType, setFollowerOrFollowingModalType] =
     useState(null);
+
+  //
+
+  useEffect(() => {
+    const listener = pvtEventListner(authUser?.token);
+    listener
+      .private(`user-follow-status.${authUser.id}`)
+      .listen("UserFollowStatusEvent", (e) => {
+        console.log("user follow status event: ", e);
+
+        const { sender_follow_status, receiver_follow_status } = e.followStatus;
+        const followReq = e.followReq;
+
+        if (followReq.sender_id === authUser.id) {
+          setData((prev) => ({
+            ...prev,
+            follow_status: sender_follow_status,
+          }));
+        } else if (followReq.receiver_id === authUser.id) {
+          setData((prev) => ({
+            ...prev,
+            follow_status: receiver_follow_status,
+          }));
+        }
+      });
+
+    return () => {
+      listener.leave(`user-follow-status.${authUser.id}`);
+    };
+  }, []);
+
+  console.log("data: ", data);
+  //
 
   const renderPosts = () => {
     switch (selectedTab) {
@@ -43,9 +92,36 @@ const SingleProfile = () => {
     showUserReq(userId);
   }, [userId]);
 
+  const followHandler = (id) => {
+    userFollowReq(id);
+    console.log("follow req");
+  };
+
+  const unFollowHandler = (id) => {
+    userUnFollowReq(id);
+    console.log("unfollow req");
+  };
+
+  const acceptFollowHandler = (id) => {
+    userAcceptFollowReq(id);
+    console.log("accept follow req");
+  };
+
+  const rejectFollowHandler = (id) => {
+    userRejectFollowReq(id);
+
+    console.log("reject follow req");
+  };
+
+  const removeFollowHandler = (id) => {
+    userRemoveFollowReq(id);
+
+    console.log("remove follow req");
+  };
+
   return (
     <>
-      <div className="max-w-5xl mx-auto py-10">
+      <div className="max-w-5xl mx-auto py-10 px-4">
         {isLoading ? (
           <p>loading...</p>
         ) : error ? (
@@ -99,14 +175,86 @@ const SingleProfile = () => {
                 </div>
               </div>
 
-              {authUser?.id !== +userId ? (
-                <div className="flex items-center gap-4">
-                  <Button variant="outline" className="w-32">
-                    Message
-                  </Button>
-                  <Button className="w-32">Follow</Button>
-                </div>
-              ) : (
+              {authUser?.id !== +userId && data?.follow_status === "none" && (
+                <Button
+                  type="button"
+                  className="w-full"
+                  onClick={() => followHandler(data?.id)}
+                >
+                  Follow
+                  {isLoadingUserFollow && (
+                    <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                  )}
+                </Button>
+              )}
+
+              {authUser?.id !== +userId &&
+                (data?.follow_status === "pending_sent" ||
+                  data?.follow_status === "follower") && (
+                  <div className="flex gap-2">
+                    {data?.follow_status === "follower" && (
+                      <Button variant="outline">Message</Button>
+                    )}
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={() => unFollowHandler(data?.id)}
+                    >
+                      {data?.follow_status === "pending_sent"
+                        ? "Cancel Request"
+                        : "Unfollow"}
+                      {isLoadingUserUnFollow && (
+                        <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+              {authUser?.id !== +userId &&
+                data?.follow_status === "following" && (
+                  <div className="flex gap-2">
+                    <Button variant="outline">Message</Button>
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={() => removeFollowHandler(data?.id)}
+                    >
+                      Remove
+                      {isLoadingUserRemoveFollow && (
+                        <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+              {authUser?.id !== +userId &&
+                data?.follow_status === "pending_received" && (
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={() => acceptFollowHandler(data?.id)}
+                    >
+                      Accept
+                      {isLoadingUserAcceptFollow && (
+                        <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={() => rejectFollowHandler(data?.id)}
+                      variant="outline"
+                    >
+                      Reject
+                      {isLoadingUserRejectFollow && (
+                        <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+              {authUser?.id === +userId && (
                 <div className="flex items-center gap-4">
                   <Button className="w-32">Edit Profile</Button>
                 </div>

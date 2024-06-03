@@ -12,7 +12,7 @@ import {
 import { pvtEventListner } from "@/lib/laravelEcho.config";
 import { Bell } from "lucide-react";
 import moment from "moment";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
@@ -25,13 +25,10 @@ const Notification = () => {
     setData: setDataAllNotifications,
     error: errorAllNotifications,
     isLoading: isLoadingAllNotifications,
+    reFetch: reFetchAllNotifications,
     allNotificationsReq,
   } = useAllNotifications();
   const { markNotificationAsReadReq } = useMarkNotificationAsRead();
-
-  useEffect(() => {
-    allNotificationsReq();
-  }, []);
 
   useEffect(() => {
     const listener = pvtEventListner(authUser?.token);
@@ -41,7 +38,7 @@ const Notification = () => {
         console.log("notification event: ", e);
         if (authUser?.id === e.notification.user_id) {
           setDataAllNotifications((prev) => {
-            return [...prev, e.notification];
+            return [e.notification, ...prev];
           });
           toast({
             title: e.notification.data.message,
@@ -54,6 +51,12 @@ const Notification = () => {
     };
   }, []);
 
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    allNotificationsReq();
+  }, [open]);
+
   const getNotificationCount = () => {
     const isNotReadNotifications = dataAllNotifications?.filter(
       (notification) => {
@@ -65,9 +68,12 @@ const Notification = () => {
   };
 
   const navigationHandler = (type, userId, id, is_read) => {
+    setOpen(false);
+
     switch (type) {
       case "user-follow":
         is_read === 0 && markNotificationAsReadReq(id);
+        reFetchAllNotifications();
         navigate(`/profiles/${userId}`);
         break;
       default:
@@ -76,7 +82,7 @@ const Notification = () => {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <li className="cursor-pointer relative">
           <Bell className="w-7 h-7" />
@@ -85,24 +91,28 @@ const Notification = () => {
           </span>
         </li>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-w-md p-0">
-        <DropdownMenuLabel>
+      <DropdownMenuContent className="w-80 p-0">
+        <DropdownMenuLabel className="w-full">
           <div className="flex items-center justify-between px-2 py-1">
             <p className="flex items-center gap-2">
               Notifications :{" "}
               <b className="mt-0.5">{dataAllNotifications?.length}</b>
             </p>
-            <NavLink to={"/notifications"} className={"text-xs text-end"}>
+            <NavLink
+              to={"/notifications"}
+              className={"text-xs text-end"}
+              onClick={() => setOpen(false)}
+            >
               View all
             </NavLink>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="mb-0" />
-        <ul className="">
+        <ul className="w-full">
           {isLoadingAllNotifications ? (
-            <li className="text-sm">loading...</li>
+            <li className="w-full text-sm text-center p-3">loading...</li>
           ) : errorAllNotifications ? (
-            <li className="text-sm">failed to load</li>
+            <li className="w-full text-sm text-center p-3">failed to load</li>
           ) : dataAllNotifications?.length > 0 ? (
             dataAllNotifications?.slice(0, 5)?.map((notification, i) => (
               <li
@@ -133,7 +143,7 @@ const Notification = () => {
               </li>
             ))
           ) : (
-            <li className="text-sm">No notifications</li>
+            <li className="w-full text-sm text-center p-3">No notifications</li>
           )}
         </ul>
       </DropdownMenuContent>

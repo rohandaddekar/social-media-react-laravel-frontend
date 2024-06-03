@@ -18,7 +18,7 @@ const useMarkAllNotificationAsRead = () => {
         authHeaders
       );
       // console.log("fetch all notifications res: ", res);
-      setData(res?.data?.data);
+      setData(res);
     } catch (error) {
       // console.log("failed to fetch all notifications: ", error);
       setError(error);

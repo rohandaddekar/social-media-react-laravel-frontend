@@ -31,12 +31,11 @@ const SingleProfile = () => {
     useUserUnFollow();
 
   const [selectedTab, setSelectedTab] = useState("published-posts");
+  const [selectedUserId, setSelectedUserId] = useState("");
   const [openFollowerOrFollowingModal, setOpenFollowerOrFollowingModal] =
     useState(false);
   const [followerOrFollowingModalType, setFollowerOrFollowingModalType] =
     useState(null);
-
-  //
 
   useEffect(() => {
     const listener = pvtEventListner(authUser?.token);
@@ -67,7 +66,6 @@ const SingleProfile = () => {
   }, []);
 
   console.log("data: ", data);
-  //
 
   const renderPosts = () => {
     switch (selectedTab) {
@@ -154,18 +152,20 @@ const SingleProfile = () => {
                     onClick={() => {
                       setOpenFollowerOrFollowingModal(true);
                       setFollowerOrFollowingModalType("follower");
+                      setSelectedUserId(data?.id);
                     }}
                   >
-                    Followers: <b>16</b>
+                    Followers: <b>{data?.followers || 0}</b>
                   </p>
                   <p
                     className="border text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50"
                     onClick={() => {
                       setOpenFollowerOrFollowingModal(true);
                       setFollowerOrFollowingModalType("following");
+                      setSelectedUserId(data?.id);
                     }}
                   >
-                    Followings: <b>38</b>
+                    Followings: <b>{data?.followings || 0}</b>
                   </p>
                   {authUser?.id === +userId && (
                     <p className="border text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50">
@@ -293,6 +293,7 @@ const SingleProfile = () => {
         open={openFollowerOrFollowingModal}
         setOpen={setOpenFollowerOrFollowingModal}
         type={followerOrFollowingModalType}
+        userId={selectedUserId}
       />
     </>
   );

@@ -16,10 +16,7 @@ const useUserFollowings = () => {
       setIsLoading(true);
       const res = await axios.get(`/users/followings/${userId}`, authHeaders);
       console.log("user followings res: ", res?.data?.data);
-      toast({
-        title: res?.data?.message || "Successfully fetched followings",
-      });
-      setData(res?.data);
+      setData(res?.data?.data);
     } catch (error) {
       console.error("failed to fetch followings: ", error);
       toast({
@@ -32,7 +29,7 @@ const useUserFollowings = () => {
     }
   };
 
-  return { data, error, isLoading, userFollowingsReq };
+  return { data, setData, error, isLoading, userFollowingsReq };
 };
 
 export default useUserFollowings;

@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import useUserFollowers from "@/api/users/Followers";
 import useUserFollowings from "@/api/users/Followings";
 import { useEffect } from "react";
+import useUserSentRequests from "@/api/users/SentRequests";
+import useUserReceivedRequests from "@/api/users/ReceivedRequests";
 
 const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
   const {
@@ -21,14 +23,32 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
     isLoading: isLoadingUserFollowings,
     userFollowingsReq,
   } = useUserFollowings();
+  const {
+    data: dataUserSentRequests,
+    error: errorUserSentRequests,
+    isLoading: isLoadingUserSentRequests,
+    userSentRequestsReq,
+  } = useUserSentRequests();
+  const {
+    data: dataUserReceivedRequests,
+    error: errorUserReceivedRequests,
+    isLoading: isLoadingUserReceivedRequests,
+    userReceivedRequestsReq,
+  } = useUserReceivedRequests();
 
   useEffect(() => {
     if (userId) {
       if (type === "follower") {
         userFollowersReq(userId);
-      } else {
+      } else if (type === "following") {
         userFollowingsReq(userId);
       }
+    }
+
+    if (type === "sentRequest") {
+      userSentRequestsReq();
+    } else if (type === "recievedRequest") {
+      userReceivedRequestsReq();
     }
   }, [userId, type]);
 
@@ -37,15 +57,34 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[450px]">
           <h1 className="font-semibold text-lg border-b pb-2">
-            {type === "follower" ? "Followers" : "Followings"} -{" "}
+            {type === "follower"
+              ? "Followers"
+              : type === "following"
+              ? "Followings"
+              : type === "sentRequest"
+              ? "Sent Requests"
+              : type === "receivedRequests"
+              ? "Received Requests"
+              : ""}
+            -{" "}
             <b>
               {(type === "follower" && dataUserFollowers?.length) ||
-                (type === "following" && dataUserFollowings?.length)}
+                0 ||
+                (type === "following" && dataUserFollowings?.length) ||
+                0 ||
+                (type === "sentRequest" && dataUserSentRequests?.length) ||
+                0 ||
+                (type === "receivedRequest" &&
+                  dataUserReceivedRequests?.length) ||
+                0}
             </b>
           </h1>
 
           {((type === "follower" && dataUserFollowers?.length > 0) ||
-            (type === "following" && dataUserFollowings?.length > 0)) && (
+            (type === "following" && dataUserFollowings?.length > 0) ||
+            (type === "sentRequest" && dataUserSentRequests?.length > 0) ||
+            (type === "receivedRequest" &&
+              dataUserReceivedRequests?.length > 0)) && (
             <Input placeholder="Search" />
           )}
 
@@ -60,36 +99,34 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
                   failed to load
                 </li>
               ) : dataUserFollowers?.length > 0 ? (
-                dataUserFollowers?.map((_, i) => (
+                dataUserFollowers?.map((data, i) => (
                   <li
                     key={i}
                     className="flex items-center justify-between gap-4 border rounded-md p-3"
                   >
                     <div className="w-full flex items-center gap-4">
                       <img
-                        src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-                        alt="user"
+                        src={data?.user?.profile_image}
+                        alt={data?.user?.first_name}
                         className="w-14 h-14 rounded-full"
                       />
                       <div className="w-full">
                         <NavLink
-                          to={`/profiles/`}
+                          to={`/profiles/${data?.user?.id}`}
                           className={
                             "w-full text-md font-semibold hover:underline"
                           }
+                          onClick={() => setOpen(false)}
                         >
-                          John Doe
+                          {data?.user?.first_name} {data?.user?.last_name}
                         </NavLink>
                         <p className="text-xs text-gray-600">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing
-                          elit...
+                          {data?.user?.about_me}
                         </p>
                       </div>
                     </div>
 
-                    <Button size="sm">
-                      {type === "follower" ? "Follow" : "Unfollow"}
-                    </Button>
+                    <Button size="sm">Remove</Button>
                   </li>
                 ))
               ) : (
@@ -108,41 +145,131 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
                   failed to load
                 </li>
               ) : dataUserFollowings?.length > 0 ? (
-                dataUserFollowings?.map((_, i) => (
+                dataUserFollowings?.map((data, i) => (
                   <li
                     key={i}
                     className="flex items-center justify-between gap-4 border rounded-md p-3"
                   >
                     <div className="w-full flex items-center gap-4">
                       <img
-                        src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-                        alt="user"
+                        src={data?.user?.profile_image}
+                        alt={data?.user?.first_name}
                         className="w-14 h-14 rounded-full"
                       />
                       <div className="w-full">
                         <NavLink
-                          to={`/profiles/`}
+                          to={`/profiles/${data?.user?.id}`}
                           className={
                             "w-full text-md font-semibold hover:underline"
                           }
+                          onClick={() => setOpen(false)}
                         >
-                          John Doe
+                          {data?.user?.first_name} {data?.user?.last_name}
                         </NavLink>
                         <p className="text-xs text-gray-600">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing
-                          elit...
+                          {data?.user?.about_me}
                         </p>
                       </div>
                     </div>
 
-                    <Button size="sm">
-                      {type === "follower" ? "Follow" : "Unfollow"}
-                    </Button>
+                    <Button size="sm">Unfollow</Button>
                   </li>
                 ))
               ) : (
                 <li className="text-sm text-center text-gray-500">
                   No followings
+                </li>
+              ))}
+
+            {type === "sentRequest" &&
+              (isLoadingUserSentRequests ? (
+                <li className="text-sm text-center text-gray-500">
+                  loading...
+                </li>
+              ) : errorUserSentRequests ? (
+                <li className="text-sm text-center text-gray-500">
+                  failed to load
+                </li>
+              ) : dataUserSentRequests?.length > 0 ? (
+                dataUserSentRequests?.map((data, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center justify-between gap-4 border rounded-md p-3"
+                  >
+                    <div className="w-full flex items-center gap-4">
+                      <img
+                        src={data?.user?.profile_image}
+                        alt={data?.user?.first_name}
+                        className="w-14 h-14 rounded-full"
+                      />
+                      <div className="w-full">
+                        <NavLink
+                          to={`/profiles/${data?.user?.id}`}
+                          className={
+                            "w-full text-md font-semibold hover:underline"
+                          }
+                          onClick={() => setOpen(false)}
+                        >
+                          {data?.user?.first_name} {data?.user?.last_name}
+                        </NavLink>
+                        <p className="text-xs text-gray-600">
+                          {data?.user?.about_me}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button size="sm">Cancel</Button>
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-center text-gray-500">
+                  No Requests
+                </li>
+              ))}
+
+            {type === "receivedRequest" &&
+              (isLoadingUserReceivedRequests ? (
+                <li className="text-sm text-center text-gray-500">
+                  loading...
+                </li>
+              ) : errorUserReceivedRequests ? (
+                <li className="text-sm text-center text-gray-500">
+                  failed to load
+                </li>
+              ) : dataUserReceivedRequests?.length > 0 ? (
+                dataUserReceivedRequests?.map((data, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center justify-between gap-4 border rounded-md p-3"
+                  >
+                    <div className="w-full flex items-center gap-4">
+                      <img
+                        src={data?.user?.profile_image}
+                        alt={data?.user?.first_name}
+                        className="w-14 h-14 rounded-full"
+                      />
+                      <div className="w-full">
+                        <NavLink
+                          to={`/profiles/${data?.user?.id}`}
+                          className={
+                            "w-full text-md font-semibold hover:underline"
+                          }
+                          onClick={() => setOpen(false)}
+                        >
+                          {data?.user?.first_name} {data?.user?.last_name}
+                        </NavLink>
+                        <p className="text-xs text-gray-600">
+                          {data?.user?.about_me}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button size="sm">Reject</Button>
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-center text-gray-500">
+                  No Requests
                 </li>
               ))}
           </ul>

@@ -168,9 +168,26 @@ const SingleProfile = () => {
                     Followings: <b>{data?.followings || 0}</b>
                   </p>
                   {authUser?.id === +userId && (
-                    <p className="border text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50">
-                      Requests: <b>6</b>
-                    </p>
+                    <>
+                      <p
+                        className="border text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50"
+                        onClick={() => {
+                          setOpenFollowerOrFollowingModal(true);
+                          setFollowerOrFollowingModalType("sentRequest");
+                        }}
+                      >
+                        Sent Requests: <b>{data?.sent_requests || 0}</b>
+                      </p>
+                      <p
+                        className="border text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-gray-50"
+                        onClick={() => {
+                          setOpenFollowerOrFollowingModal(true);
+                          setFollowerOrFollowingModalType("receivedRequest");
+                        }}
+                      >
+                        Received Requests: <b>{data?.received_requests || 0}</b>
+                      </p>
+                    </>
                   )}
                 </div>
               </div>

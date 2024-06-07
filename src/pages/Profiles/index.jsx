@@ -1,5 +1,6 @@
 import useAllUsers from "@/api/users/All";
 import UserCard from "@/components/Users/Card";
+import UserCardSkeleton from "@/components/Users/CardSkeleton";
 import { pvtEventListner } from "@/lib/laravelEcho.config";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -51,7 +52,9 @@ const Profiles = () => {
       <div className="container py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {isLoading ? (
-            <p>loading...</p>
+            Array.from({ length: 12 }).map((_, i) => (
+              <UserCardSkeleton key={i} />
+            ))
           ) : error ? (
             <p>failed to load</p>
           ) : data?.length > 0 ? (

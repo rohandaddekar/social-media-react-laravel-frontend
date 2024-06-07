@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import useAllPosts from "@/api/posts/All";
 import PostCard from "@/components/Posts/Card";
+import PostCardSkeleton from "@/components/Posts/CardSkeleton";
 
 const PublishedPosts = ({ userId, setSelectedTab }) => {
   const {
@@ -25,7 +26,11 @@ const PublishedPosts = ({ userId, setSelectedTab }) => {
   return (
     <>
       {isLoadingAllPosts ? (
-        <p>loading...</p>
+        Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="mb-3">
+            <PostCardSkeleton />
+          </div>
+        ))
       ) : errorAllPosts ? (
         <p>failed to load</p>
       ) : (

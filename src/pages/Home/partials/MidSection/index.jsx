@@ -3,6 +3,7 @@ import useAllPosts from "@/api/posts/All";
 import PostCard from "@/components/Posts/Card";
 import Stories from "@/components/Stories";
 import { publicEventListner } from "@/lib/laravelEcho.config";
+import PostCardSkeleton from "@/components/Posts/CardSkeleton";
 
 const MidSection = () => {
   const { allPostsReq, data, setData, isLoading, reFetchAllPosts } =
@@ -52,7 +53,11 @@ const MidSection = () => {
 
       {/* START: All Posts */}
       {isLoading ? (
-        <>loading...</>
+        Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="mb-3">
+            <PostCardSkeleton />
+          </div>
+        ))
       ) : (
         <ul className="space-y-3">
           {data?.data?.length > 0 ? (

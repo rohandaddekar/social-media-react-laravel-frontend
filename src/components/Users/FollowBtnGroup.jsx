@@ -47,7 +47,9 @@ const FollowBtnGroup = ({ userId, follow_status }) => {
         (follow_status === "pending_sent" || follow_status === "follower") && (
           <div className="flex gap-2">
             {follow_status === "follower" && (
-              <Button variant="outline">Message</Button>
+              <Button variant="outline" className="w-full">
+                Message
+              </Button>
             )}
             <Button
               type="button"
@@ -64,7 +66,9 @@ const FollowBtnGroup = ({ userId, follow_status }) => {
 
       {authUser?.id !== +userId && follow_status === "following" && (
         <div className="flex gap-2">
-          <Button variant="outline">Message</Button>
+          <Button variant="outline" className="w-full">
+            Message
+          </Button>
           <Button
             type="button"
             className="w-full"

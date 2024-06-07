@@ -97,7 +97,7 @@ const CommentCard = ({ comments, postId, setReFetch }) => {
                     <div className="flex justify-between">
                       <div>
                         <NavLink
-                          to={`/profile/`}
+                          to={`/profile/${comment?.user?.id}`}
                           className="text-md font-semibold hover:underline hover:text-blue-600 transition-all ease-in-out"
                         >
                           {comment?.user?.first_name} {comment?.user?.last_name}{" "}

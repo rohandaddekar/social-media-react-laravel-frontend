@@ -2,6 +2,7 @@ import useAllNotifications from "@/api/notifications/All";
 import useDeleteAllNotification from "@/api/notifications/DeleteAll";
 import useMarkAllNotificationAsRead from "@/api/notifications/MarkAllAsRead";
 import NotificationCard from "@/components/Notification/Card";
+import NotificationCardSkeleton from "@/components/Notification/CardSkeleton";
 import { Bell, CheckCheck, Loader2, Trash2 } from "lucide-react";
 import { useEffect } from "react";
 
@@ -67,7 +68,11 @@ const Notifications = () => {
 
         <ul className="border">
           {isLoadingAllNotifications ? (
-            <li className="text-sm p-5 text-center">loading...</li>
+            Array.from({ length: 10 }).map((_, i) => (
+              <li className="w-full text-sm text-center p-3" key={i}>
+                <NotificationCardSkeleton />
+              </li>
+            ))
           ) : errorAllNotifications ? (
             <li className="text-sm p-5 text-center">failed to load</li>
           ) : dataAllNotifications?.length > 0 ? (

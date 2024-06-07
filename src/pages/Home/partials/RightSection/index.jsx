@@ -1,4 +1,5 @@
 import useAllUsers from "@/api/users/All";
+import SuggestedUserCardSkeleton from "@/components/Users/SuggestedUserCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
@@ -20,7 +21,11 @@ const RightSection = () => {
       </div>
       <div className="space-y-3">
         {isLoading ? (
-          <p>loading...</p>
+          Array.from({ length: 5 }).map((_, i) => (
+            <div key={i}>
+              <SuggestedUserCardSkeleton />
+            </div>
+          ))
         ) : error ? (
           <p>failed to load</p>
         ) : (

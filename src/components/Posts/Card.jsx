@@ -152,10 +152,7 @@ const PostCard = ({ post, redirect = true, setReFetch, scheduled }) => {
       <div className="py-5 border rounded-lg">
         <div className="px-5 flex gap-3">
           <img
-            src={
-              post?.user?.profile_image ||
-              "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg"
-            }
+            src={post?.user?.profile_image || post?.user?.first_name}
             alt={post?.user?.first_name}
             className="w-16 h-16 rounded-full bg-white"
           />

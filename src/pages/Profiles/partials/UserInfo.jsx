@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import useUserFollowStatusListner from "@/listners/UserFollowStatusListner";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import UserInfoSkeleton from "@/pages/Profiles/partials/UserInfoSkeleton";
 
 const UserInfo = ({ userId }) => {
   const authUser = useSelector((state) => state.authUser);
@@ -26,7 +27,7 @@ const UserInfo = ({ userId }) => {
   }, [userId]);
 
   if (isLoading) {
-    return <p>loading...</p>;
+    return <UserInfoSkeleton />;
   }
 
   if (error) {

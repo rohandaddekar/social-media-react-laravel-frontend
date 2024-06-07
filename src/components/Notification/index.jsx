@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import NotificationCardSkeleton from "@/components/Notification/CardSkeleton";
 
 const Notification = () => {
   const navigate = useNavigate();
@@ -110,7 +111,11 @@ const Notification = () => {
         <DropdownMenuSeparator className="mb-0" />
         <ul className="w-full">
           {isLoadingAllNotifications ? (
-            <li className="w-full text-sm text-center p-3">loading...</li>
+            Array.from({ length: 3 }).map((_, i) => (
+              <li className="w-full text-sm text-center p-3" key={i}>
+                <NotificationCardSkeleton />
+              </li>
+            ))
           ) : errorAllNotifications ? (
             <li className="w-full text-sm text-center p-3">failed to load</li>
           ) : dataAllNotifications?.length > 0 ? (

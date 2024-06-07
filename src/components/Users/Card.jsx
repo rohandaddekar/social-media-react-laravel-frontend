@@ -75,10 +75,10 @@ const UserCard = ({ user }) => {
           <div className="pt-5">
             <ul className="max-w-[220px] mx-auto flex items-center justify-between">
               <li className="text-sm text-gray-500 flex items-center justify-between mb-1">
-                Followers: <b className="ml-2">14</b>
+                Followers: <b className="ml-2">{user?.followers}</b>
               </li>
               <li className="text-sm text-gray-500 flex items-center justify-between">
-                Following: <b className="ml-2">28</b>
+                Following: <b className="ml-2">{user?.followings}</b>
               </li>
             </ul>
           </div>

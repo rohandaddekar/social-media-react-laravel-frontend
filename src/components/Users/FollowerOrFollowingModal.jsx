@@ -63,9 +63,9 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
               ? "Followings"
               : type === "sentRequest"
               ? "Sent Requests"
-              : type === "receivedRequests"
+              : type === "receivedRequest"
               ? "Received Requests"
-              : ""}
+              : ""}{" "}
             -{" "}
             <b>
               {(type === "follower" && dataUserFollowers?.length) ||

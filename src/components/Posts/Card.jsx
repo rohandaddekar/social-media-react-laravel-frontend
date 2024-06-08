@@ -163,7 +163,7 @@ const PostCard = ({ post, redirect = true, scheduled }) => {
                 {post?.publish_at <=
                 moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
                   ? moment(post?.publish_at).fromNow()
-                  : "scheduled at " + moment(post?.publish_at).format("LLL")}
+                  : "scheduled at " + moment(post?.publish_at).format()}
               </p>
             </div>
 

@@ -1,8 +1,8 @@
 import useAllPosts from "@/api/posts/All";
 import PostCard from "@/components/Posts/Card";
 import PostCardSkeleton from "@/components/Posts/CardSkeleton";
-import { publicEventListner } from "@/lib/laravelEcho.config";
 import usePostCommentListner from "@/listners/post/Comment";
+import usePostListner from "@/listners/post/Post";
 import { useEffect } from "react";
 
 const Posts = () => {
@@ -12,25 +12,50 @@ const Posts = () => {
     allPostsReq();
   }, []);
 
-  useEffect(() => {
-    publicEventListner()
-      .channel("post-channel")
-      .listen("PostEvent", (e) => {
-        setData((prev) => {
-          const parsedImages = JSON.parse(e.post.images);
-
-          console.log("e.post: ", e.post);
-          return {
-            ...prev,
-            data: [{ ...e.post, images: parsedImages }, ...prev.data],
-          };
-        });
+  const postListnerHandler = (e) => {
+    if (e.type === "created") {
+      setData((prev) => {
+        return {
+          ...prev,
+          data: [
+            {
+              ...e.post,
+              images: JSON.parse(e.post.images),
+            },
+            ...prev.data,
+          ],
+        };
       });
+    }
 
-    return () => {
-      publicEventListner().leave("post-channel");
-    };
-  }, []);
+    if (e.type === "deleted") {
+      setData((prev) => {
+        return {
+          ...prev,
+          data: prev.data.filter((post) => post.id !== e.post.id),
+        };
+      });
+    }
+
+    if (e.type === "updated") {
+      console.log("updated: ", e);
+      setData((prev) => {
+        return {
+          ...prev,
+          data: prev.data.map((post) => {
+            if (post.id === e.post.id) {
+              return {
+                ...e.post,
+                images: JSON.parse(e.post.images),
+              };
+            }
+            return post;
+          }),
+        };
+      });
+    }
+  };
+  usePostListner(postListnerHandler);
 
   const postCommentListnerHandler = (e) => {
     console.log("postCommentListnerHandler: ", e);

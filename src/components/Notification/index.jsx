@@ -85,12 +85,12 @@ const Notification = () => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <li className="cursor-pointer relative">
+        <div className="cursor-pointer relative">
           <Bell className="w-7 h-7" />
           <span className="absolute border-2 border-gray-300 -top-2 -right-2 text-xs text-white rounded-full w-6 h-6 flex items-center justify-center bg-green-800">
             {getNotificationCount() > 10 ? "9+" : getNotificationCount()}
           </span>
-        </li>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80 p-0">
         <DropdownMenuLabel className="w-full">
@@ -109,18 +109,18 @@ const Notification = () => {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="mb-0" />
-        <ul className="w-full">
+        <div className="w-full">
           {isLoadingAllNotifications ? (
             Array.from({ length: 3 }).map((_, i) => (
-              <li className="w-full text-sm text-center p-3" key={i}>
+              <div className="w-full text-sm text-center p-3" key={i}>
                 <NotificationCardSkeleton />
-              </li>
+              </div>
             ))
           ) : errorAllNotifications ? (
-            <li className="w-full text-sm text-center p-3">failed to load</li>
+            <div className="w-full text-sm text-center p-3">failed to load</div>
           ) : dataAllNotifications?.length > 0 ? (
             dataAllNotifications?.slice(0, 5)?.map((notification, i) => (
-              <li
+              <div
                 key={i}
                 className={`text-sm p-3 cursor-pointer flex gap-3 border-b hover:bg-gray-100 ${
                   notification?.is_read === 0 ? "bg-gray-100" : "bg-white"
@@ -145,12 +145,14 @@ const Notification = () => {
                     {moment(notification?.created_at).fromNow()}
                   </p>
                 </div>
-              </li>
+              </div>
             ))
           ) : (
-            <li className="w-full text-sm text-center p-3">No notifications</li>
+            <div className="w-full text-sm text-center p-3">
+              No notifications
+            </div>
           )}
-        </ul>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

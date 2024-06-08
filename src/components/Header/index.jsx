@@ -37,16 +37,16 @@ const Header = () => {
               <li className="hover:underline transition-all ease-in-out">
                 <NavLink to="/">Home</NavLink>
               </li>
-              {!authUser ? (
+              {!authUser && (
                 <li>
                   <Button asChild>
                     <NavLink to="/sign-in">Sign In</NavLink>
                   </Button>
                 </li>
-              ) : (
-                <Notification />
               )}
             </ul>
+
+            {authUser && <Notification />}
 
             {authUser && (
               <>

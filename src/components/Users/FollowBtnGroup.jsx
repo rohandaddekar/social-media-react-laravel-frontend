@@ -2,14 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import useUserAcceptFollow from "@/api/users/AcceptFollow";
-import useUserFollow from "@/api/users/Follow";
-import useUserRejectFollow from "@/api/users/RejectFollow";
-import useUserRemoveFollow from "@/api/users/RemoveFollow";
-import useUserUnFollow from "@/api/users/UnFollow";
+import useUserAcceptFollow from "@/api/users/follow/AcceptFollow";
+import useUserFollow from "@/api/users/follow/Follow";
+import useUserRejectFollow from "@/api/users/follow/RejectFollow";
+import useUserRemoveFollow from "@/api/users/follow/RemoveFollow";
+import useUserUnFollow from "@/api/users/follow/UnFollow";
 import { useSelector } from "react-redux";
 
-const FollowBtnGroup = ({ userId, follow_status }) => {
+const FollowBtnGroup = ({ userId, follow_status, btnSize = "md" }) => {
   const authUser = useSelector((state) => state.authUser);
 
   const { isLoading: isLoadingUserFollow, userFollowReq } = useUserFollow();
@@ -32,6 +32,7 @@ const FollowBtnGroup = ({ userId, follow_status }) => {
     <>
       {authUser?.id !== +userId && follow_status === "none" && (
         <Button
+          size={btnSize}
           type="button"
           className="w-full"
           onClick={() => followHandler(userId)}
@@ -47,11 +48,12 @@ const FollowBtnGroup = ({ userId, follow_status }) => {
         (follow_status === "pending_sent" || follow_status === "follower") && (
           <div className="flex gap-2">
             {follow_status === "follower" && (
-              <Button variant="outline" className="w-full">
+              <Button size={btnSize} variant="outline" className="w-full">
                 Message
               </Button>
             )}
             <Button
+              size={btnSize}
               type="button"
               className="w-full"
               onClick={() => unFollowHandler(userId)}
@@ -66,10 +68,11 @@ const FollowBtnGroup = ({ userId, follow_status }) => {
 
       {authUser?.id !== +userId && follow_status === "following" && (
         <div className="flex gap-2">
-          <Button variant="outline" className="w-full">
+          <Button size={btnSize} variant="outline" className="w-full">
             Message
           </Button>
           <Button
+            size={btnSize}
             type="button"
             className="w-full"
             onClick={() => removeFollowHandler(userId)}
@@ -85,6 +88,7 @@ const FollowBtnGroup = ({ userId, follow_status }) => {
       {authUser?.id !== +userId && follow_status === "pending_received" && (
         <div className="flex gap-2">
           <Button
+            size={btnSize}
             type="button"
             className="w-full"
             onClick={() => acceptFollowHandler(userId)}
@@ -95,6 +99,7 @@ const FollowBtnGroup = ({ userId, follow_status }) => {
             )}
           </Button>
           <Button
+            size={btnSize}
             type="button"
             className="w-full"
             onClick={() => rejectFollowHandler(userId)}

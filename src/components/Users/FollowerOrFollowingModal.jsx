@@ -4,11 +4,11 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import useUserFollowers from "@/api/users/Followers";
-import useUserFollowings from "@/api/users/Followings";
+import useUserFollowers from "@/api/users/follow/Followers";
+import useUserFollowings from "@/api/users/follow/Followings";
 import { useEffect } from "react";
-import useUserSentRequests from "@/api/users/SentRequests";
-import useUserReceivedRequests from "@/api/users/ReceivedRequests";
+import useUserSentRequests from "@/api/users/follow/SentRequests";
+import useUserReceivedRequests from "@/api/users/follow/ReceivedRequests";
 
 const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
   const {

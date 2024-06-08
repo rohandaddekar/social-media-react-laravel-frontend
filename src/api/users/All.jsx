@@ -10,22 +10,28 @@ const useAllUsers = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const allUsersReq = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get(`/users`, authHeaders);
-      setData(res?.data?.data);
-    } catch (error) {
-      console.log("failed to fetch all users: ", error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [axios, authHeaders]);
+  const allUsersReq = useCallback(
+    async (query) => {
+      try {
+        setIsLoading(true);
+        const res = await axios.get(`/users${query ? query : ""}`, authHeaders);
+        setData(res?.data?.data);
+      } catch (error) {
+        console.log("failed to fetch all users: ", error);
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [axios, authHeaders]
+  );
 
-  const reFetchAllUsers = useCallback(async () => {
-    await allUsersReq();
-  }, [allUsersReq]);
+  const reFetchAllUsers = useCallback(
+    async (query) => {
+      await allUsersReq(query);
+    },
+    [allUsersReq]
+  );
 
   return { data, setData, error, isLoading, allUsersReq, reFetchAllUsers };
 };

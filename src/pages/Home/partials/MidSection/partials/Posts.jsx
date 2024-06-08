@@ -33,22 +33,70 @@ const Posts = () => {
   }, []);
 
   const postCommentListnerHandler = (e) => {
-    setData((prev) => {
-      const updatedData = prev.data.map((post) => {
-        if (post.id === e.comment.post_id) {
-          return {
-            ...post,
-            comments: [e.comment, ...post.comments],
-          };
-        }
-        return post;
-      });
+    console.log("postCommentListnerHandler: ", e);
 
-      return {
-        ...prev,
-        data: updatedData,
-      };
-    });
+    if (e.type === "created") {
+      setData((prev) => {
+        const updatedData = prev.data.map((post) => {
+          if (post.id === e.comment.post_id) {
+            return {
+              ...post,
+              comments: [e.comment, ...post.comments],
+            };
+          }
+          return post;
+        });
+
+        return {
+          ...prev,
+          data: updatedData,
+        };
+      });
+    }
+
+    if (e.type === "deleted") {
+      setData((prev) => {
+        const updatedData = prev.data.map((post) => {
+          if (post.id === e.comment.post_id) {
+            return {
+              ...post,
+              comments: post.comments.filter(
+                (comment) => comment.id !== e.comment.id
+              ),
+            };
+          }
+          return post;
+        });
+
+        return {
+          ...prev,
+          data: updatedData,
+        };
+      });
+    }
+
+    if (e.type === "updated") {
+      setData((prev) => {
+        const updatedData = prev.data.map((post) => {
+          if (post.id === e.comment.post_id) {
+            return {
+              ...post,
+              comments: post.comments.map((comment) => {
+                if (comment.id === e.comment.id) {
+                  return e.comment;
+                }
+                return comment;
+              }),
+            };
+          }
+          return post;
+        });
+        return {
+          ...prev,
+          data: updatedData,
+        };
+      });
+    }
   };
   usePostCommentListner(postCommentListnerHandler);
 

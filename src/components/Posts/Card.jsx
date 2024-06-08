@@ -5,7 +5,7 @@ import { MessageCircleMore, Send, ThumbsUp } from "lucide-react";
 import moment from "moment";
 import { NavLink, useNavigate } from "react-router-dom";
 import CommentCard from "@/components/Posts/Comment/Card";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -102,20 +102,16 @@ const renderImages = (images) => {
   }
 };
 
-const PostCard = ({ post, redirect = true, setReFetch, scheduled }) => {
+const PostCard = ({ post, redirect = true, scheduled }) => {
   const navigate = useNavigate();
-  const { likeUnlikePostReq, data: dataLikeUnlikePost } = useLikeUnlikePost();
+  const { likeUnlikePostReq } = useLikeUnlikePost();
   const {
     data: dataShowPost,
     error: errorShowPost,
     isLoading: isLoadingShowPost,
     showPostReq,
   } = useShowPost();
-  const {
-    data: dataDelete,
-    deletePostReq,
-    isLoading: isLoadingDelete,
-  } = useDeletePost();
+  const { deletePostReq, isLoading: isLoadingDelete } = useDeletePost();
   const {
     data: dataUpdatePost,
     isLoading: isLoadingUpdatePost,
@@ -132,12 +128,6 @@ const PostCard = ({ post, redirect = true, setReFetch, scheduled }) => {
     useState(false);
   const [openPostShareModal, setOpenPostShareModal] = useState(false);
   const [openPostImagesModal, setOpenPostImagesModal] = useState(false);
-
-  useEffect(() => {
-    if (dataLikeUnlikePost || dataDelete) {
-      setReFetch(true);
-    }
-  }, [dataLikeUnlikePost, dataDelete, setReFetch]);
 
   const imgClickHandler = () => {
     if (redirect) {
@@ -284,11 +274,7 @@ const PostCard = ({ post, redirect = true, setReFetch, scheduled }) => {
         )}
 
         {showComment && !scheduled && (
-          <CommentCard
-            comments={post?.comments}
-            postId={post?.id}
-            setReFetch={setReFetch}
-          />
+          <CommentCard comments={post?.comments} postId={post?.id} />
         )}
       </div>
 
@@ -306,7 +292,6 @@ const PostCard = ({ post, redirect = true, setReFetch, scheduled }) => {
         showData={dataShowPost}
         showError={errorShowPost}
         showIsLoading={isLoadingShowPost}
-        setReFetch={setReFetch}
       />
       <AlertModal
         open={openPostDeleteAlertModal}

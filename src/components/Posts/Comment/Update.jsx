@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import useShowPostComment from "@/api/posts/comments/Show";
 import useUpdatePostComment from "@/api/posts/comments/Update";
 
-const UpdateCommentModal = ({ open, setOpen, id, setReFetch }) => {
+const UpdateCommentModal = ({ open, setOpen, id }) => {
   const {
     data: dataShowComment,
     error: errorShowComment,
@@ -49,7 +49,6 @@ const UpdateCommentModal = ({ open, setOpen, id, setReFetch }) => {
   useEffect(() => {
     if (dataUpdateComment) {
       setOpen(false);
-      setReFetch(true);
     }
   }, [dataUpdateComment, setOpen]);
 

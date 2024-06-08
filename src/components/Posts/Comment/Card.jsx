@@ -17,37 +17,56 @@ import AlertModal from "@/components/AlertModal";
 import useCreatePostComment from "@/api/posts/comments/Create";
 import moment from "moment";
 import useDeletePostComment from "@/api/posts/comments/Delete";
+import useAllPostComments from "@/api/posts/comments/All";
+import usePostCommentListner from "@/listners/post/Comment";
 
-const CommentCard = ({ comments, postId, setReFetch }) => {
+const CommentCard = ({ postId }) => {
   const authUser = useSelector((state) => state.authUser);
+
   const {
-    data: dataDelete,
-    deletePostCommentReq,
-    isLoading: isLoadingDelete,
-  } = useDeletePostComment();
-  const { createPostCommentReq, data, isLoading } = useCreatePostComment();
+    allPostCommentsReq,
+    data: dataAllPostComments,
+    setData: setDataAllPostComments,
+    isLoading: isLoadingAllPostComments,
+    error: errorAllPostComments,
+  } = useAllPostComments();
+
+  useEffect(() => {
+    allPostCommentsReq(postId);
+  }, [postId]);
+
+  const { deletePostCommentReq, isLoading: isLoadingDelete } =
+    useDeletePostComment();
+  const { createPostCommentReq, isLoading } = useCreatePostComment();
 
   const [showMore, setShowMore] = useState(false);
   const [selectedComment, setSelectedComment] = useState(null);
-  const [filteredComments, setFilteredComments] = useState(
-    comments?.length > 2 ? comments?.slice(0, 2) : comments
-  );
+  const [filteredComments, setFilteredComments] = useState(null);
   const [openCommentUpdateModal, setOpenCommentUpdateModal] = useState(false);
   const [openCommentDeleteAlertModal, setOpenCommentDeleteAlertModal] =
     useState(false);
   const [comment, setComment] = useState("");
+
+  useEffect(() => {
+    if (dataAllPostComments) {
+      setFilteredComments(
+        dataAllPostComments?.length > 2
+          ? dataAllPostComments?.slice(0, 2)
+          : dataAllPostComments
+      );
+    }
+  }, [dataAllPostComments]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     createPostCommentReq({ comment }, postId);
   };
 
-  useEffect(() => {
-    if (data || dataDelete) {
-      setComment("");
-      setReFetch(true);
-    }
-  }, [data, dataDelete]);
+  const postCommentListnerHandler = (e) => {
+    setDataAllPostComments((prev) => [e?.comment, ...prev]);
+  };
+
+  usePostCommentListner(postCommentListnerHandler);
 
   return (
     <>
@@ -81,7 +100,11 @@ const CommentCard = ({ comments, postId, setReFetch }) => {
             </form>
           </div>
 
-          {filteredComments?.length > 0 ? (
+          {isLoadingAllPostComments ? (
+            <p>loading...</p>
+          ) : errorAllPostComments ? (
+            <p>failed to load</p>
+          ) : filteredComments?.length > 0 ? (
             filteredComments?.map((comment, i) => (
               <div key={i} className="mt-2">
                 <div className="flex gap-3 border p-3 rounded-lg">
@@ -149,7 +172,7 @@ const CommentCard = ({ comments, postId, setReFetch }) => {
                         )}
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-gray-600 bg-white p-3 rounded-md mt-2">
                       {comment?.comment}
                     </p>
                   </div>
@@ -162,13 +185,13 @@ const CommentCard = ({ comments, postId, setReFetch }) => {
             </p>
           )}
 
-          {comments?.length > 2 &&
+          {dataAllPostComments?.length > 2 &&
             (showMore ? (
               <span
                 className="block text-end text-gray-600 text-xs cursor-pointer mt-2"
                 onClick={() => {
                   setShowMore(false);
-                  setFilteredComments(comments?.slice(0, 2));
+                  setFilteredComments(dataAllPostComments?.slice(0, 2));
                 }}
               >
                 show less
@@ -178,10 +201,10 @@ const CommentCard = ({ comments, postId, setReFetch }) => {
                 className="block text-end text-gray-600 text-xs cursor-pointer mt-2"
                 onClick={() => {
                   setShowMore(true);
-                  setFilteredComments(comments);
+                  setFilteredComments(dataAllPostComments);
                 }}
               >
-                (showing 2 of {comments?.length}) show more
+                (showing 2 of {dataAllPostComments?.length}) show more
               </span>
             ))}
         </div>
@@ -189,7 +212,6 @@ const CommentCard = ({ comments, postId, setReFetch }) => {
 
       <UpdateCommentModal
         id={selectedComment}
-        setReFetch={setReFetch}
         open={openCommentUpdateModal}
         setOpen={setOpenCommentUpdateModal}
       />

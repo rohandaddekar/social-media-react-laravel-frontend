@@ -36,7 +36,6 @@ const CreateOrUpdatePostModal = ({
   showData,
   showError,
   showIsLoading,
-  setReFetch,
 }) => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
@@ -105,7 +104,6 @@ const CreateOrUpdatePostModal = ({
   useEffect(() => {
     if (submitData) {
       if (type === "update") {
-        setReFetch(true);
         setOpen(false);
       }
 

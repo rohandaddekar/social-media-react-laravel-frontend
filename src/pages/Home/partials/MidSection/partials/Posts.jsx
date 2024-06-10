@@ -6,19 +6,12 @@ import usePostLikeListner from "@/listners/post/Like";
 import usePostListner from "@/listners/post/Post";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import PostPagination from "@/pages/Home/partials/MidSection/partials/Pagination";
 
 const Posts = () => {
   const authUser = useSelector((state) => state.authUser);
-  const { allPostsReq, data, error, setData, isLoading } = useAllPosts();
+  const { allPostsReq, data, error, setData, isLoading, reFetchAllPosts } =
+    useAllPosts();
 
   useEffect(() => {
     allPostsReq();
@@ -189,24 +182,7 @@ const Posts = () => {
       </ul>
 
       {data?.data?.length > 0 && (
-        <div className="mt-5">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <PostPagination data={data} reFetchAllPosts={reFetchAllPosts} />
       )}
     </>
   );

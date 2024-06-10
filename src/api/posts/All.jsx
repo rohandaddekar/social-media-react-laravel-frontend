@@ -14,10 +14,7 @@ const useAllPosts = () => {
     async (query) => {
       try {
         setIsLoading(true);
-        const res = await axios.get(
-          `/posts${query ? `?${query}` : ""}`,
-          authHeaders
-        );
+        const res = await axios.get(`/posts${query ? query : ""}`, authHeaders);
         setData(res?.data?.data);
       } catch (error) {
         console.log("failed to fetch all posts: ", error);

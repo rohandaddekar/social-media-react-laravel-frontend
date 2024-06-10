@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
+import ScrollToTop from "@/components/ScrollToTop/ScrollToTop";
 
 const Index = () => {
   const authUser = useSelector((state) => state.authUser);
@@ -12,6 +13,8 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
+
       <Header />
       <div className="flex-auto">
         <Outlet />

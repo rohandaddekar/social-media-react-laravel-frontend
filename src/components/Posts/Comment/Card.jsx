@@ -19,6 +19,7 @@ import moment from "moment";
 import useDeletePostComment from "@/api/posts/comments/Delete";
 import useAllPostComments from "@/api/posts/comments/All";
 import usePostCommentListner from "@/listners/post/Comment";
+import CommentCardSkeleton from "@/components/Posts/Comment/CardSkeleton";
 
 const CommentCard = ({ postId }) => {
   const authUser = useSelector((state) => state.authUser);
@@ -37,7 +38,7 @@ const CommentCard = ({ postId }) => {
 
   const { deletePostCommentReq, isLoading: isLoadingDelete } =
     useDeletePostComment();
-  const { createPostCommentReq, isLoading } = useCreatePostComment();
+  const { createPostCommentReq, isLoading, data } = useCreatePostComment();
 
   const [showMore, setShowMore] = useState(false);
   const [selectedComment, setSelectedComment] = useState(null);
@@ -74,8 +75,13 @@ const CommentCard = ({ postId }) => {
       });
     }
   };
-
   usePostCommentListner(postCommentListnerHandler);
+
+  useEffect(() => {
+    if (data) {
+      setComment("");
+    }
+  }, [data]);
 
   return (
     <>
@@ -110,7 +116,9 @@ const CommentCard = ({ postId }) => {
           </div>
 
           {isLoadingAllPostComments ? (
-            <p>loading...</p>
+            Array.from({ length: 3 }).map((_, i) => (
+              <CommentCardSkeleton key={i} />
+            ))
           ) : errorAllPostComments ? (
             <p>failed to load</p>
           ) : dataAllPostComments?.length > 0 ? (

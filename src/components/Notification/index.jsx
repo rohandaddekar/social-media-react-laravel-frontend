@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { pvtEventListner } from "@/lib/laravelEcho.config";
 import { Bell } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -17,6 +16,7 @@ import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
 import NotificationCardSkeleton from "@/components/Notification/CardSkeleton";
+import useNotificationListner from "@/listners/NotificationListner";
 
 const Notification = () => {
   const navigate = useNavigate();
@@ -31,26 +31,18 @@ const Notification = () => {
   } = useAllNotifications();
   const { markNotificationAsReadReq } = useMarkNotificationAsRead();
 
-  useEffect(() => {
-    const listener = pvtEventListner(authUser?.token);
-    listener
-      .private(`notification.${authUser.id}`)
-      .listen("NotificationEvent", (e) => {
-        console.log("notification event: ", e);
-        if (authUser?.id === e.notification.user_id) {
-          setDataAllNotifications((prev) => {
-            return [e.notification, ...prev];
-          });
-          toast({
-            title: e.notification.data.message,
-          });
-        }
+  const notificationListnerHandler = (e) => {
+    // console.log("notification event: ", e);
+    if (authUser?.id === e.notification.user_id) {
+      setDataAllNotifications((prev) => {
+        return [e.notification, ...prev];
       });
-
-    return () => {
-      listener.leave(`user-follow-status.${authUser.id}`);
-    };
-  }, []);
+      toast({
+        title: e.notification.data.message,
+      });
+    }
+  };
+  useNotificationListner(notificationListnerHandler);
 
   const [open, setOpen] = useState(false);
 
@@ -68,14 +60,19 @@ const Notification = () => {
     return isNotReadNotifications?.length;
   };
 
-  const navigationHandler = (type, userId, id, is_read) => {
+  const navigationHandler = (type, data, id, is_read) => {
     setOpen(false);
 
     switch (type) {
       case "user-follow":
         is_read === 0 && markNotificationAsReadReq(id);
         reFetchAllNotifications();
-        navigate(`/profiles/${userId}`);
+        navigate(`/profiles/${data?.user?.id}`);
+        break;
+      case "post":
+        is_read === 0 && markNotificationAsReadReq(id);
+        reFetchAllNotifications();
+        navigate(`/posts/${data?.post_id}`);
         break;
       default:
         break;
@@ -128,7 +125,7 @@ const Notification = () => {
                 onClick={() =>
                   navigationHandler(
                     notification?.type,
-                    notification?.data?.user?.id,
+                    notification?.data,
                     notification?.id,
                     notification?.is_read
                   )

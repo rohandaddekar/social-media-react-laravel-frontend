@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import { cn } from "@/lib/utils";
-import { MessageCircleMore, Send, ThumbsUp } from "lucide-react";
+import { Loader2, MessageCircleMore, Send, ThumbsUp } from "lucide-react";
 import moment from "moment";
 import { NavLink, useNavigate } from "react-router-dom";
 import CommentCard from "@/components/Posts/Comment/Card";
@@ -21,6 +21,7 @@ import useLikeUnlikePost from "@/api/posts/LikeUnlike";
 import useDeletePost from "@/api/posts/Delete";
 import useShowPost from "@/api/posts/Show";
 import useUpdatePost from "@/api/posts/Update";
+import { Button } from "../ui/button";
 
 const renderImages = (images) => {
   if (images?.length === 0) {
@@ -104,7 +105,8 @@ const renderImages = (images) => {
 
 const PostCard = ({ post, redirect = true, scheduled }) => {
   const navigate = useNavigate();
-  const { likeUnlikePostReq } = useLikeUnlikePost();
+  const { likeUnlikePostReq, isLoading: isLoadingLikeUnlike } =
+    useLikeUnlikePost();
   const {
     data: dataShowPost,
     error: errorShowPost,
@@ -245,16 +247,21 @@ const PostCard = ({ post, redirect = true, scheduled }) => {
               </p>
             </div>
             <div className="border-t grid grid-cols-3 gap-x-5 pt-4">
-              <p
+              <Button
+                type="button"
                 className={cn([
                   "flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out",
                   post?.is_liked ? "text-blue-600" : "text-gray-500",
                 ])}
                 onClick={() => likeUnlikePostReq(post?.id)}
+                disabled={isLoadingLikeUnlike}
               >
                 <ThumbsUp className="w-4 h-4 mr-1" />
                 Like
-              </p>
+                {isLoadingLikeUnlike && (
+                  <Loader2 className="ml-2 w-4 h-4 animate-spin" />
+                )}
+              </Button>
               <p
                 className="flex items-center justify-center gap-1 cursor-pointer bg-gray-50 hover:bg-gray-100 rounded-md py-2 px-3 transition-all ease-in-out"
                 onClick={() => setShowComment(!showComment)}

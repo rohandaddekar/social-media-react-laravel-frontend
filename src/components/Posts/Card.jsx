@@ -308,7 +308,11 @@ const PostCard = ({ post, redirect = true, scheduled }) => {
         isLoading={isLoadingDelete}
         deleteHandler={() => deletePostReq(selectedPost)}
       />
-      <ShareModal open={openPostShareModal} setOpen={setOpenPostShareModal} />
+      <ShareModal
+        open={openPostShareModal}
+        setOpen={setOpenPostShareModal}
+        link={`/posts/${post?.id}`}
+      />
       <ImagesModal
         open={openPostImagesModal}
         setOpen={setOpenPostImagesModal}

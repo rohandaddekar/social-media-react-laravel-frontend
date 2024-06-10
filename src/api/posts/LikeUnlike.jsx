@@ -18,7 +18,7 @@ const useLikeUnlikePost = () => {
       toast({
         title: res?.data?.message || "Post like/unlike successfully",
       });
-      console.log("like/unlike post res: ", res?.data?.data);
+      console.log("like/unlike post res: ", res?.data);
       setData(res);
     } catch (error) {
       console.log("failed to like/unlike posts: ", error);

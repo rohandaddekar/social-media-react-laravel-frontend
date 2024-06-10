@@ -2,10 +2,13 @@ import useAllPosts from "@/api/posts/All";
 import PostCard from "@/components/Posts/Card";
 import PostCardSkeleton from "@/components/Posts/CardSkeleton";
 import usePostCommentListner from "@/listners/post/Comment";
+import usePostLikeListner from "@/listners/post/Like";
 import usePostListner from "@/listners/post/Post";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Posts = () => {
+  const authUser = useSelector((state) => state.authUser);
   const { allPostsReq, data, error, setData, isLoading } = useAllPosts();
 
   useEffect(() => {
@@ -124,6 +127,29 @@ const Posts = () => {
     }
   };
   usePostCommentListner(postCommentListnerHandler);
+
+  const postLikeListnerHandler = (e) => {
+    // console.log("postLikeListnerHandler: ", e);
+
+    setData((prev) => {
+      const updatedData = prev.data.map((post) => {
+        if (post.id === e.post.id) {
+          return {
+            ...post,
+            likes: e.post.likes,
+            is_liked: e.post.likes.some((like) => like.user_id === authUser.id),
+          };
+        }
+        return post;
+      });
+
+      return {
+        ...prev,
+        data: updatedData,
+      };
+    });
+  };
+  usePostLikeListner(postLikeListnerHandler);
 
   if (isLoading) {
     return Array.from({ length: 3 }).map((_, i) => (

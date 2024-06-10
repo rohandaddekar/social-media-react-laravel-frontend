@@ -210,22 +210,24 @@ const PostCard = ({ post, redirect = true, scheduled }) => {
             <p>{post?.content}</p>
           )}
 
-          {post?.content?.length > 200 &&
-            (showMore ? (
-              <span
-                className="block text-end text-gray-600 text-xs cursor-pointer"
-                onClick={() => setShowMore(false)}
-              >
-                show less
-              </span>
-            ) : (
-              <span
-                className="block text-end text-gray-600 text-xs cursor-pointer"
-                onClick={() => setShowMore(true)}
-              >
-                show more
-              </span>
-            ))}
+          <div className="text-right">
+            {post?.content?.length > 200 &&
+              (showMore ? (
+                <span
+                  className="text-end text-gray-600 text-xs cursor-pointer"
+                  onClick={() => setShowMore(false)}
+                >
+                  show less
+                </span>
+              ) : (
+                <span
+                  className="text-end text-gray-600 text-xs cursor-pointer"
+                  onClick={() => setShowMore(true)}
+                >
+                  show more
+                </span>
+              ))}
+          </div>
         </div>
 
         <div

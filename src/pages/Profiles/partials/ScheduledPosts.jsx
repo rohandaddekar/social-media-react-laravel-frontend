@@ -15,12 +15,12 @@ const ScheduledPosts = ({ userId, setSelectedTab }) => {
   } = useAllPosts();
 
   const reFetch = () => {
-    reFetchAllPosts(`user_id=${userId}`);
+    reFetchAllPosts(`?user_id=${userId}`);
     setSelectedTab("published-posts");
   };
 
   useEffect(() => {
-    allPostsReq(`per_page=10&user_id=${userId}&scheduled=true`);
+    allPostsReq(`?per_page=10&user_id=${userId}&scheduled=true`);
   }, [userId]);
 
   return (

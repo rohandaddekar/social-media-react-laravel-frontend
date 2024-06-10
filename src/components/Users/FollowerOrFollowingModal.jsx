@@ -9,6 +9,7 @@ import useUserFollowings from "@/api/users/follow/Followings";
 import { useEffect } from "react";
 import useUserSentRequests from "@/api/users/follow/SentRequests";
 import useUserReceivedRequests from "@/api/users/follow/ReceivedRequests";
+import SuggestedUserCardSkeleton from "./SuggestedUserCardSkeleton";
 
 const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
   const {
@@ -91,9 +92,11 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
           <ul className="space-y-2">
             {type === "follower" &&
               (isLoadingUserFollowers ? (
-                <li className="text-sm text-center text-gray-500">
-                  loading...
-                </li>
+                Array.from({ length: 3 }).map((_, i) => (
+                  <li key={i}>
+                    <SuggestedUserCardSkeleton />
+                  </li>
+                ))
               ) : errorUserFollowers ? (
                 <li className="text-sm text-center text-gray-500">
                   failed to load
@@ -137,9 +140,11 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
 
             {type === "following" &&
               (isLoadingUserFollowings ? (
-                <li className="text-sm text-center text-gray-500">
-                  loading...
-                </li>
+                Array.from({ length: 3 }).map((_, i) => (
+                  <li key={i}>
+                    <SuggestedUserCardSkeleton />
+                  </li>
+                ))
               ) : errorUserFollowings ? (
                 <li className="text-sm text-center text-gray-500">
                   failed to load
@@ -183,9 +188,11 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
 
             {type === "sentRequest" &&
               (isLoadingUserSentRequests ? (
-                <li className="text-sm text-center text-gray-500">
-                  loading...
-                </li>
+                Array.from({ length: 3 }).map((_, i) => (
+                  <li key={i}>
+                    <SuggestedUserCardSkeleton />
+                  </li>
+                ))
               ) : errorUserSentRequests ? (
                 <li className="text-sm text-center text-gray-500">
                   failed to load
@@ -229,9 +236,11 @@ const FollowerOrFollowingModal = ({ open, setOpen, type, userId }) => {
 
             {type === "receivedRequest" &&
               (isLoadingUserReceivedRequests ? (
-                <li className="text-sm text-center text-gray-500">
-                  loading...
-                </li>
+                Array.from({ length: 3 }).map((_, i) => (
+                  <li key={i}>
+                    <SuggestedUserCardSkeleton />
+                  </li>
+                ))
               ) : errorUserReceivedRequests ? (
                 <li className="text-sm text-center text-gray-500">
                   failed to load

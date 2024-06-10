@@ -8,6 +8,7 @@ const SuggestedUserCardSkeleton = () => {
         <Skeleton className="h-4 w-28" />
         <Skeleton className="h-3 w-36 mt-2" />
       </div>
+      <Skeleton className="h-10 w-24 ml-auto" />
     </div>
   );
 };

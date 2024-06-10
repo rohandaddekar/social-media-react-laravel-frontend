@@ -6,6 +6,15 @@ import usePostLikeListner from "@/listners/post/Like";
 import usePostListner from "@/listners/post/Post";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const Posts = () => {
   const authUser = useSelector((state) => state.authUser);
@@ -165,21 +174,40 @@ const Posts = () => {
 
   return (
     <>
-      {
-        <ul className="space-y-3">
-          {data?.data?.length > 0 ? (
-            data?.data?.map((post, i) => (
-              <li key={i}>
-                <PostCard post={post} />
-              </li>
-            ))
-          ) : (
-            <li className="bg-gray-50 rounded-md p-3 text-center">
-              no post yet...
+      <ul className="space-y-3">
+        {data?.data?.length > 0 ? (
+          data?.data?.map((post, i) => (
+            <li key={i}>
+              <PostCard post={post} />
             </li>
-          )}
-        </ul>
-      }
+          ))
+        ) : (
+          <li className="bg-gray-50 rounded-md p-3 text-center">
+            no post yet...
+          </li>
+        )}
+      </ul>
+
+      {data?.data?.length > 0 && (
+        <div className="mt-5">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </>
   );
 };

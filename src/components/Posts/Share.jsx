@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Copy } from "lucide-react";
-import { toast } from "../ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 const ShareModal = ({ open, setOpen, link }) => {
   const fullLink = import.meta.env.VITE_APP_BASE_URL + link;

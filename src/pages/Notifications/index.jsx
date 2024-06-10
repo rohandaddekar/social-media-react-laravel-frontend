@@ -66,15 +66,15 @@ const Notifications = () => {
           </div>
         </div>
 
-        <ul className="border">
+        <div className="border">
           {isLoadingAllNotifications ? (
             Array.from({ length: 10 }).map((_, i) => (
-              <li className="w-full text-sm text-center p-3" key={i}>
+              <div className="w-full text-sm text-center p-3" key={i}>
                 <NotificationCardSkeleton />
-              </li>
+              </div>
             ))
           ) : errorAllNotifications ? (
-            <li className="text-sm p-5 text-center">failed to load</li>
+            <div className="text-sm p-5 text-center">failed to load</div>
           ) : dataAllNotifications?.length > 0 ? (
             dataAllNotifications?.map((notification, i) => (
               <NotificationCard
@@ -84,9 +84,9 @@ const Notifications = () => {
               />
             ))
           ) : (
-            <li className="text-sm p-5 text-center">No notifications</li>
+            <div className="text-sm p-5 text-center">No notifications</div>
           )}
-        </ul>
+        </div>
       </div>
     </>
   );

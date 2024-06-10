@@ -20,7 +20,23 @@ const UserInfo = ({ userId }) => {
   const [followerOrFollowingModalType, setFollowerOrFollowingModalType] =
     useState(null);
 
-  useUserFollowStatusListner(setData);
+  const userFollowStatusListnerHandler = (e) => {
+    const { sender_follow_status, receiver_follow_status } = e.followStatus;
+    const followReq = e.followReq;
+
+    if (followReq.sender_id === authUser.id) {
+      setData((prev) => ({
+        ...prev,
+        follow_status: sender_follow_status,
+      }));
+    } else if (followReq.receiver_id === authUser.id) {
+      setData((prev) => ({
+        ...prev,
+        follow_status: receiver_follow_status,
+      }));
+    }
+  };
+  useUserFollowStatusListner(userFollowStatusListnerHandler);
 
   useEffect(() => {
     showUserReq(userId);

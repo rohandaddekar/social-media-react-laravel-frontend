@@ -3,13 +3,38 @@ import useAllUsers from "@/api/users/All";
 import { NavLink } from "react-router-dom";
 import SuggestedUserCardSkeleton from "@/components/Users/SuggestedUserCardSkeleton";
 import SuggestedUserCard from "@/pages/Home/partials/RightSection/partials/SuggestedUserCard";
+import useUserFollowStatusListner from "@/listners/UserFollowStatusListner";
 
 const RightSection = () => {
-  const { allUsersReq, data, error, isLoading } = useAllUsers();
+  const { allUsersReq, data, setData, error, isLoading } = useAllUsers();
 
   useEffect(() => {
     allUsersReq("?showSuggested=true");
   }, []);
+
+  const userFollowStatusListnerHandler = (e) => {
+    const { sender_follow_status, receiver_follow_status } = e.followStatus;
+    const followReq = e.followReq;
+
+    setData((prev) => {
+      return prev.map((user) => {
+        if (user.id === followReq.sender_id) {
+          return {
+            ...user,
+            follow_status: receiver_follow_status,
+          };
+        } else if (user.id === followReq.receiver_id) {
+          return {
+            ...user,
+            follow_status: sender_follow_status,
+          };
+        } else {
+          return user;
+        }
+      });
+    });
+  };
+  useUserFollowStatusListner(userFollowStatusListnerHandler);
 
   return (
     <>

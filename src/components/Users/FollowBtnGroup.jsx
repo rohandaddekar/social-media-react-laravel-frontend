@@ -9,7 +9,7 @@ import useUserRemoveFollow from "@/api/users/follow/RemoveFollow";
 import useUserUnFollow from "@/api/users/follow/UnFollow";
 import { useSelector } from "react-redux";
 
-const FollowBtnGroup = ({ userId, follow_status, btnSize = "md" }) => {
+const FollowBtnGroup = ({ userId, follow_status, btnSize = "default" }) => {
   const authUser = useSelector((state) => state.authUser);
 
   const { isLoading: isLoadingUserFollow, userFollowReq } = useUserFollow();

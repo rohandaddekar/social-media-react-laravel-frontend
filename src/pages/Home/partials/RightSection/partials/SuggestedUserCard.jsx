@@ -25,7 +25,7 @@ const SuggestedUserCard = ({ user }) => {
             </div>
 
             <FollowBtnGroup
-              user={user?.id}
+              userId={user?.id}
               follow_status={user?.follow_status}
               btnSize="sm"
             />

@@ -89,12 +89,8 @@ const Edit = () => {
     <>
       <div className="max-w-5xl mx-auto py-10 px-4">
         <div className="border p-5 rounded-md">
-          <h1 className="text-2xl font-semibold border-b pb-3 mb-5">
-            Edit Profile
-          </h1>
-
           <Tabs defaultValue="general" className="w-full">
-            <TabsList className="w-full">
+            <TabsList className="w-full mb-5">
               <TabsTrigger value="general" className="w-full">
                 General
               </TabsTrigger>

@@ -36,10 +36,20 @@ const Header = () => {
           <div className="flex items-center gap-5">
             <ul className="flex items-center gap-5">
               <li className="hover:underline transition-all ease-in-out">
-                <NavLink to="/">
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "block bg-blue-500 p-2 rounded-md text-white"
+                      : "block p-2 rounded-md hover:bg-blue-500 hover:text-white"
+                  }
+                >
                   <Home className="w-6 h-6" />
                 </NavLink>
               </li>
+
+              {authUser && <Notification />}
+
               {!authUser && (
                 <li>
                   <Button asChild>
@@ -48,8 +58,6 @@ const Header = () => {
                 </li>
               )}
             </ul>
-
-            {authUser && <Notification />}
 
             {authUser && (
               <>

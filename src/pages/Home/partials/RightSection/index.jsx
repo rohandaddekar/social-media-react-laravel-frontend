@@ -36,6 +36,18 @@ const RightSection = () => {
   };
   useUserFollowStatusListner(userFollowStatusListnerHandler);
 
+  if (isLoading) {
+    return (
+      <div className="space-y-3">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i}>
+            <SuggestedUserCardSkeleton />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="border-b mb-3 pb-2 flex items-center justify-between">
@@ -45,13 +57,7 @@ const RightSection = () => {
         </NavLink>
       </div>
       <div className="space-y-3">
-        {isLoading ? (
-          Array.from({ length: 5 }).map((_, i) => (
-            <div key={i}>
-              <SuggestedUserCardSkeleton />
-            </div>
-          ))
-        ) : error ? (
+        {error ? (
           <p>failed to load</p>
         ) : (
           data?.map((user, i) => <SuggestedUserCard key={i} user={user} />)

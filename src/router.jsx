@@ -14,6 +14,7 @@ import PostDetails from "@/pages/Post/Details";
 import Profiles from "@/pages/Profiles";
 import SingleProfile from "@/pages/Profiles/Single";
 import Notifications from "@/pages/Notifications";
+import Edit from "@/pages/Profiles/Edit";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/profiles/:userId",
         element: <SingleProfile />,
+      },
+      {
+        path: "/profiles/edit",
+        element: <Edit />,
       },
       {
         path: "/notifications",

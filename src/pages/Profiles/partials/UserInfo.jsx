@@ -8,6 +8,7 @@ import useUserFollowStatusListner from "@/listners/UserFollowStatusListner";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import UserInfoSkeleton from "@/pages/Profiles/partials/UserInfoSkeleton";
+import { NavLink } from "react-router-dom";
 
 const UserInfo = ({ userId }) => {
   const authUser = useSelector((state) => state.authUser);
@@ -123,7 +124,9 @@ const UserInfo = ({ userId }) => {
 
           {authUser?.id === +userId && (
             <div className="flex items-center gap-4">
-              <Button className="w-32">Edit Profile</Button>
+              <Button className="w-32" asChild>
+                <NavLink to={`/profiles/edit`}>Edit Profile</NavLink>
+              </Button>
             </div>
           )}
         </div>

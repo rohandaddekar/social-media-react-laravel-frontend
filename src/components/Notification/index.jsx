@@ -83,7 +83,7 @@ const Notification = () => {
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <div className="cursor-pointer relative">
-          <Bell className="w-7 h-7" />
+          <Bell className="w-6 h-6" />
           <span className="absolute border-2 border-gray-300 -top-2 -right-2 text-xs text-white rounded-full w-6 h-6 flex items-center justify-center bg-green-800">
             {getNotificationCount() > 10 ? "9+" : getNotificationCount()}
           </span>

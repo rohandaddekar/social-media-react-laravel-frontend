@@ -4,7 +4,7 @@ import Posts from "@/pages/Home/partials/MidSection/partials/Posts";
 const MidSection = () => {
   return (
     <>
-      <Stories />
+      {/* <Stories /> */}
       <Posts />
     </>
   );

@@ -6,6 +6,7 @@ import CreateOrUpdateModal from "@/components/Posts/CreateOrUpdate";
 import { useState } from "react";
 import useCreatePost from "@/api/posts/Create";
 import Notification from "../Notification";
+import { Home } from "lucide-react";
 
 const Header = () => {
   const authUser = useSelector((state) => state.authUser);
@@ -35,7 +36,9 @@ const Header = () => {
           <div className="flex items-center gap-5">
             <ul className="flex items-center gap-5">
               <li className="hover:underline transition-all ease-in-out">
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/">
+                  <Home className="w-6 h-6" />
+                </NavLink>
               </li>
               {!authUser && (
                 <li>

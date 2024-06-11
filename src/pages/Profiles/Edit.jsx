@@ -60,8 +60,17 @@ const Edit = () => {
 
   const generalSubmitHandler = (e) => {
     e.preventDefault();
-    userUpdateProfileReq(formData);
-    console.log("formData: ", formData);
+
+    const formDataObj = new FormData();
+    formDataObj.append("first_name", formData?.first_name);
+    formDataObj.append("last_name", formData?.last_name);
+    formDataObj.append("email", formData?.email);
+    formDataObj.append("about_me", formData?.about_me);
+    formDataObj.append("profile_image", selectedProfileImg);
+    formDataObj.append("profile_banner_image", selectedBannerImg);
+
+    userUpdateProfileReq(formDataObj);
+    console.log("formDataObj: ", formDataObj);
   };
 
   const changePasswordSubmitHandler = (e) => {

@@ -16,11 +16,13 @@ const useUserUpdateProfile = () => {
   const userUpdateProfileReq = async (payload) => {
     try {
       setIsLoading(true);
-      const res = await axios.patch(
-        `/users/update-profile`,
-        payload,
-        authHeaders
-      );
+      const res = await axios.post(`/users/update-profile`, payload, {
+        ...authHeaders,
+        headers: {
+          ...authHeaders.headers,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setData(res?.data?.data);
       navigate("/");
       toast({

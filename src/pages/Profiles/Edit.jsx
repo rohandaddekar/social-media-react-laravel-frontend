@@ -7,11 +7,17 @@ import { useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useUserUpdateProfile from "@/api/users/UpdateProfile";
 import { Loader2 } from "lucide-react";
+import useUserChangePassword from "@/api/users/ChangePassword";
 
 const Edit = () => {
   const { data, error, isLoading, meUserReq } = useMeUser();
   const { isLoading: isLoadingUpdateProfile, userUpdateProfileReq } =
     useUserUpdateProfile();
+  const {
+    isLoading: isLoadingChangePassword,
+    error: errorChangePassword,
+    userChangePasswordReq,
+  } = useUserChangePassword();
 
   const [selectedBannerImg, setSelectedBannerImg] = useState(null);
   const [selectedProfileImg, setSelectedProfileImg] = useState(null);
@@ -75,6 +81,7 @@ const Edit = () => {
 
   const changePasswordSubmitHandler = (e) => {
     e.preventDefault();
+    userChangePasswordReq(passwordFormData);
     console.log("passwordFormData: ", passwordFormData);
   };
 
@@ -249,7 +256,7 @@ const Edit = () => {
                     type="password"
                     onChange={onChangeHandler}
                     className="mt-1"
-                    // error={error?.errors?.old_password?.[0]}
+                    error={errorChangePassword?.errors?.old_password?.[0]}
                   />
                 </div>
                 <div className="w-full">
@@ -260,7 +267,7 @@ const Edit = () => {
                     type="password"
                     onChange={onChangeHandler}
                     className="mt-1"
-                    // error={error?.errors?.new_password?.[0]}
+                    error={errorChangePassword?.errors?.new_password?.[0]}
                   />
                 </div>
                 <div className="w-full">
@@ -271,11 +278,19 @@ const Edit = () => {
                     type="password"
                     onChange={onChangeHandler}
                     className="mt-1"
-                    // error={error?.errors?.new_password_confirmation?.[0]}
+                    error={
+                      errorChangePassword?.errors
+                        ?.new_password_confirmation?.[0]
+                    }
                   />
                 </div>
 
-                <Button>Change Password</Button>
+                <Button disabled={isLoadingChangePassword}>
+                  Change Password
+                  {isLoadingChangePassword && (
+                    <Loader2 className="ml-2 w-4 h-4 animate-spin" />
+                  )}
+                </Button>
               </form>
             </TabsContent>
           </Tabs>

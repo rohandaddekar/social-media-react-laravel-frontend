@@ -6,7 +6,7 @@ import CreateOrUpdateModal from "@/components/Posts/CreateOrUpdate";
 import { useState } from "react";
 import useCreatePost from "@/api/posts/Create";
 import Notification from "../Notification";
-import { Home } from "lucide-react";
+import { Home, MessagesSquare } from "lucide-react";
 
 const Header = () => {
   const authUser = useSelector((state) => state.authUser);
@@ -45,6 +45,18 @@ const Header = () => {
                   }
                 >
                   <Home className="w-6 h-6" />
+                </NavLink>
+              </li>
+              <li className="hover:underline transition-all ease-in-out">
+                <NavLink
+                  to="/chats"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "block bg-blue-500 p-2 rounded-md text-white"
+                      : "block p-2 rounded-md hover:bg-blue-500 hover:text-white"
+                  }
+                >
+                  <MessagesSquare className="w-6 h-6" />
                 </NavLink>
               </li>
 

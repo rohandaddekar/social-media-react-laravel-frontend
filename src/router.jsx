@@ -15,6 +15,7 @@ import Profiles from "@/pages/Profiles";
 import SingleProfile from "@/pages/Profiles/Single";
 import Notifications from "@/pages/Notifications";
 import Edit from "@/pages/Profiles/Edit";
+import Chats from "@/pages/Chats";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/notifications",
         element: <Notifications />,
+      },
+      {
+        path: "/chats",
+        element: <Chats />,
       },
     ],
   },

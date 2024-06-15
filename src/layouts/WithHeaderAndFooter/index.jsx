@@ -3,9 +3,12 @@ import Footer from "@/components/Footer";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop/ScrollToTop";
+import useChatOnlineStatus from "@/listners/chat/ChatOnlineStatus";
 
 const Index = () => {
   const authUser = useSelector((state) => state.authUser);
+
+  useChatOnlineStatus();
 
   if (!authUser) {
     return <Navigate to="/sign-in" />;

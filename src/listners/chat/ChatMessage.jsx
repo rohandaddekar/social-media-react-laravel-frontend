@@ -12,9 +12,9 @@ const useChatMessageListner = (handler) => {
     });
 
     return () => {
-      listener.leave(`chat-message`);
+      listener.leave(`chat-message.${authUser.id}`);
     };
-  }, []);
+  }, [authUser?.token, authUser?.id, handler]);
 };
 
 export default useChatMessageListner;

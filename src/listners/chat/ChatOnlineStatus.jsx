@@ -46,7 +46,7 @@ const useChatOnlineStatus = () => {
     return () => {
       listener.leave(`chat-online-status`);
     };
-  }, [authUser?.token]);
+  }, [authUser?.token, dispatch]);
 };
 
 export default useChatOnlineStatus;

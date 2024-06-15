@@ -1,21 +1,13 @@
 /* eslint-disable react/prop-types */
 
+import useChatUserIsOnline from "@/listners/chat/ChatUserIsOnline";
 import moment from "moment";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const UserCard = ({ user, setSelectedChatUser, selectedChatUser }) => {
-  const onlineUsers = useSelector((state) => state.onlineUsers);
-
   const [isOnline, setIsOnline] = useState(false);
 
-  useEffect(() => {
-    onlineUsers.forEach((onlineUser) => {
-      if (onlineUser?.id === user?.user?.id) {
-        setIsOnline((prev) => !prev);
-      }
-    });
-  }, [onlineUsers, user]);
+  useChatUserIsOnline(setIsOnline, user?.user?.id);
 
   return (
     <>

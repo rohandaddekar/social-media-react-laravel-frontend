@@ -31,10 +31,18 @@ export const onlineUsersSlice = createSlice({
       );
       return state.filter((user) => user.id !== onlineUser.id);
     },
+    removeAllOnlineUsers: () => {
+      localStorage.removeItem("onlineUsers");
+      return null;
+    },
   },
 });
 
-export const { setOnlineUsers, addOnlineUser, removeOnlineUser } =
-  onlineUsersSlice.actions;
+export const {
+  setOnlineUsers,
+  addOnlineUser,
+  removeOnlineUser,
+  removeAllOnlineUsers,
+} = onlineUsersSlice.actions;
 
 export default onlineUsersSlice.reducer;

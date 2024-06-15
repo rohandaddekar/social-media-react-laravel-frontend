@@ -2,21 +2,13 @@
 
 import useAllUsers from "@/api/users/All";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import useChatUserIsOnline from "@/listners/chat/ChatUserIsOnline";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 const Card = ({ user, setSelectedChatUser, setOpen }) => {
-  const onlineUsers = useSelector((state) => state.onlineUsers);
-
   const [isOnline, setIsOnline] = useState(false);
 
-  useEffect(() => {
-    onlineUsers.forEach((onlineUser) => {
-      if (onlineUser?.id === user?.id) {
-        setIsOnline((prev) => !prev);
-      }
-    });
-  }, [onlineUsers, user]);
+  useChatUserIsOnline(setIsOnline, user?.id);
 
   const userClickHandler = (user) => {
     setSelectedChatUser(user);

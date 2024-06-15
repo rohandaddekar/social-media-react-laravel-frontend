@@ -5,6 +5,7 @@ import { signOut } from "@/redux/slices/user";
 import { useNavigate } from "react-router-dom";
 import useAuthHeaders from "@/api/authHeaders";
 import { toast } from "@/components/ui/use-toast";
+import { removeAllOnlineUsers } from "@/redux/slices/onlineUsers";
 
 const useSignOut = () => {
   const axios = useAxios();
@@ -26,6 +27,7 @@ const useSignOut = () => {
       console.log("signed out res: ", res?.data?.data);
       setData(res?.data);
       dispatch(signOut());
+      dispatch(removeAllOnlineUsers());
       navigate("/");
     } catch (error) {
       console.error("failed to sign out: ", error);

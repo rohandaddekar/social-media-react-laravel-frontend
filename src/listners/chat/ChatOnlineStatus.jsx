@@ -19,24 +19,16 @@ const useChatOnlineStatus = () => {
     listener
       .join(`chat-online-status`)
       .here((users) => {
-        // console.log("Initial users:", users);
         dispatch(setOnlineUsers(users));
       })
       .joining((user) => {
-        // console.log("User joining channel:", user);
         dispatch(addOnlineUser(user));
       })
       .leaving((user) => {
-        // console.log("User leaving channel:", user);
         dispatch(removeOnlineUser(user));
       })
       .listenForWhisper("typing", (e) => {
-        console.log("Typing whisper received:", e);
-        // Handle whispers (custom events within channel)
-      })
-      .listen(".ChatOnlineStatusEvent", (e) => {
-        console.log("Received event:", e);
-        // handler(e);
+        console.log("typing event: ", e);
       })
       .error((error) => {
         console.error("Echo error:", error);

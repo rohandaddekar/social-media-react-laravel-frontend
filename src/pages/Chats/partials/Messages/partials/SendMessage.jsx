@@ -3,18 +3,30 @@
 import useSendChatMessage from "@/api/chats/SendMessage";
 import { Input } from "@/components/ui/input";
 import { Loader2, Paperclip, Send } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SendMessage = ({ selectedChatUserId }) => {
-  const { isLoading: isLoadingSendMessage, sendChatMessageReq } =
-    useSendChatMessage();
+  const {
+    isLoading: isLoadingSendMessage,
+    data: dataSendChatMessage,
+    sendChatMessageReq,
+  } = useSendChatMessage();
 
   const [message, setMessage] = useState("");
 
+  const onChangeHandler = (e) => {
+    setMessage(e.target.value);
+  };
+
   const sendMessageHandler = () => {
     sendChatMessageReq({ message, receiver_id: selectedChatUserId });
-    setMessage("");
   };
+
+  useEffect(() => {
+    if (dataSendChatMessage) {
+      setMessage("");
+    }
+  }, [dataSendChatMessage]);
 
   return (
     <>
@@ -26,7 +38,7 @@ const SendMessage = ({ selectedChatUserId }) => {
           placeholder="Type a message"
           className="flex-1 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={onChangeHandler}
         />
         <div
           className="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer"

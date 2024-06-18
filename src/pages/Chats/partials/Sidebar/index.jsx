@@ -4,11 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
 import AllChats from "@/pages/Chats/partials/Sidebar/partials/AllChats";
 
-const Sidebar = ({
-  setOpenAllUsersModal,
-  setSelectedChatUser,
-  selectedChatUser,
-}) => {
+const Sidebar = ({ setOpenAllUsersModal }) => {
   return (
     <>
       <div className="col-span-3 rounded-l-md overflow-y-auto bg-white">
@@ -31,10 +27,7 @@ const Sidebar = ({
             />
           </div>
 
-          <AllChats
-            setSelectedChatUser={setSelectedChatUser}
-            selectedChatUser={selectedChatUser}
-          />
+          <AllChats />
         </div>
       </div>
     </>

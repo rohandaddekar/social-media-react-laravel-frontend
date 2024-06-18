@@ -1,10 +1,15 @@
 /* eslint-disable react/prop-types */
 
 import useChatUserIsOnline from "@/listners/chat/ChatUserIsOnline";
+import { setChatUser } from "@/redux/slices/chatUser";
 import moment from "moment";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const UserCard = ({ user, setSelectedChatUser, selectedChatUser }) => {
+const UserCard = ({ user }) => {
+  const dispatch = useDispatch();
+  const selectedChatUser = useSelector((state) => state.chatUser);
+
   const [isOnline, setIsOnline] = useState(false);
 
   useChatUserIsOnline(setIsOnline, user?.user?.id);
@@ -15,7 +20,18 @@ const UserCard = ({ user, setSelectedChatUser, selectedChatUser }) => {
         className={`border rounded-md flex gap-2 p-2 cursor-pointer hover:bg-gray-50 ${
           selectedChatUser?.id === user?.user?.id ? "bg-gray-50" : "bg-white"
         }`}
-        onClick={() => setSelectedChatUser(user?.user)}
+        onClick={() =>
+          dispatch(
+            setChatUser({
+              id: user?.user?.id,
+              first_name: user?.user?.first_name,
+              last_name: user?.user?.last_name,
+              profile_image: user?.user?.profile_image,
+              email: user?.user?.email,
+              about_me: user?.user?.about_me,
+            })
+          )
+        }
       >
         <div className="relative min-w-12 h-12 rounded-full ">
           <img

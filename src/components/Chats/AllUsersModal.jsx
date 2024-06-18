@@ -3,15 +3,27 @@
 import useAllUsers from "@/api/users/All";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import useChatUserIsOnline from "@/listners/chat/ChatUserIsOnline";
+import { setChatUser } from "@/redux/slices/chatUser";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-const Card = ({ user, setSelectedChatUser, setOpen }) => {
+const Card = ({ user, setOpen }) => {
+  const dispatch = useDispatch();
   const [isOnline, setIsOnline] = useState(false);
 
   useChatUserIsOnline(setIsOnline, user?.id);
 
   const userClickHandler = (user) => {
-    setSelectedChatUser(user);
+    dispatch(
+      setChatUser({
+        id: user?.id,
+        first_name: user?.first_name,
+        last_name: user?.last_name,
+        profile_image: user?.profile_image,
+        email: user?.email,
+        about_me: user?.about_me,
+      })
+    );
     setOpen(false);
   };
 
@@ -46,12 +58,12 @@ const Card = ({ user, setSelectedChatUser, setOpen }) => {
   );
 };
 
-const AllUsersModal = ({ open, setOpen, setSelectedChatUser }) => {
+const AllUsersModal = ({ open, setOpen }) => {
   const { allUsersReq, data, error, isLoading } = useAllUsers();
 
   useEffect(() => {
     if (open) {
-      allUsersReq();
+      allUsersReq("?chatUsers=true");
     }
   }, [open]);
 
@@ -71,12 +83,7 @@ const AllUsersModal = ({ open, setOpen, setSelectedChatUser }) => {
         {data?.length > 0 ? (
           <ul className="space-y-3">
             {data?.map((user, i) => (
-              <Card
-                key={i}
-                user={user}
-                setSelectedChatUser={setSelectedChatUser}
-                setOpen={setOpen}
-              />
+              <Card key={i} user={user} setOpen={setOpen} />
             ))}
           </ul>
         ) : (

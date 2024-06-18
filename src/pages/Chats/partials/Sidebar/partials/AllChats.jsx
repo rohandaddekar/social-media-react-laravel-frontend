@@ -5,7 +5,7 @@ import useAllChats from "@/api/chats/AllChats";
 import { useEffect } from "react";
 import useChatMessageListner from "@/listners/chat/ChatMessage";
 
-const AllChats = ({ setSelectedChatUser, selectedChatUser }) => {
+const AllChats = () => {
   const {
     data: dataAllChats,
     setData: setDataAllChats,
@@ -103,12 +103,7 @@ const AllChats = ({ setSelectedChatUser, selectedChatUser }) => {
       {dataAllChats?.length > 0 ? (
         <ul className="mt-4 pt-0 space-y-3">
           {dataAllChats?.map((user, i) => (
-            <UserCard
-              key={i}
-              user={user}
-              setSelectedChatUser={setSelectedChatUser}
-              selectedChatUser={selectedChatUser}
-            />
+            <UserCard key={i} user={user} />
           ))}
         </ul>
       ) : (

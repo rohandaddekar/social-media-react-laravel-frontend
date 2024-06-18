@@ -120,7 +120,7 @@ const UserInfo = ({ userId }) => {
             </div>
           </div>
 
-          <FollowBtnGroup userId={userId} follow_status={data?.follow_status} />
+          <FollowBtnGroup user={data} follow_status={data?.follow_status} />
 
           {authUser?.id === +userId && (
             <div className="flex items-center gap-4">

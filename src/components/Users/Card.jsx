@@ -40,10 +40,7 @@ const UserCard = ({ user }) => {
             </ul>
           </div>
 
-          <FollowBtnGroup
-            userId={user?.id}
-            follow_status={user?.follow_status}
-          />
+          <FollowBtnGroup user={user} follow_status={user?.follow_status} />
         </div>
       </div>
     </>

@@ -3,8 +3,11 @@
 import UserDetails from "@/pages/Chats/partials/Messages/partials/UserDetails";
 import SelectedUserMessages from "@/pages/Chats/partials/Messages/partials/SelectedUserMessages";
 import SendMessage from "@/pages/Chats/partials/Messages/partials/SendMessage";
+import { useSelector } from "react-redux";
 
-const Messages = ({ selectedChatUser }) => {
+const Messages = () => {
+  const selectedChatUser = useSelector((state) => state.chatUser);
+
   if (!selectedChatUser) {
     return (
       <>

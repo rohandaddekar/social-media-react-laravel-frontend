@@ -45,7 +45,7 @@ const SelectedUserMessages = ({ selectedChatUserId }) => {
   }, [dataAllChatMessages]);
 
   const chatMessageListnerHandler = (e) => {
-    // console.log("chatMessageListnerHandler: ", e);
+    console.log("chatMessageListnerHandler selected user: ", e);
 
     if (e?.type === "created") {
       setDataAllChatMessages((prev) => [...prev, e?.message]);

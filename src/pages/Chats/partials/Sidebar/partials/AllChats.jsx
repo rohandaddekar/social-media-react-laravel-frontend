@@ -4,8 +4,11 @@ import UserCard from "@/pages/Chats/partials/Sidebar/partials/UserCard";
 import useAllChats from "@/api/chats/AllChats";
 import { useEffect } from "react";
 import useChatMessageListner from "@/listners/chat/ChatMessage";
+import { useSelector } from "react-redux";
 
 const AllChats = () => {
+  const authUser = useSelector((state) => state.authUser);
+
   const {
     data: dataAllChats,
     setData: setDataAllChats,
@@ -19,10 +22,33 @@ const AllChats = () => {
   }, []);
 
   const chatMessageListnerHandler = (e) => {
-    // console.log("chatMessageListnerHandler: ", e);
+    console.log("chatMessageListnerHandler All Chat: ", e);
 
     if (e?.type === "created") {
       setDataAllChats((prev) => {
+        const existingUser = prev.find(
+          (user) =>
+            user.user.id === e.message.sender_id ||
+            user.user.id === e.message.receiver_id
+        );
+
+        if (!existingUser) {
+          const newUserDetails =
+            e.message.sender_id === authUser.id
+              ? e.message.receiver
+              : e.message.sender;
+
+          const newUser = {
+            user: newUserDetails,
+            last_message: {
+              id: e.message.id,
+              message: e.message.message,
+            },
+          };
+
+          return [...prev, newUser];
+        }
+
         const updatedData = prev.map((user) => {
           if (
             user.user.id === e.message.sender_id ||

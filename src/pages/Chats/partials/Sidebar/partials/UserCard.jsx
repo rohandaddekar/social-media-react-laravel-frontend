@@ -17,7 +17,7 @@ const UserCard = ({ user }) => {
   return (
     <>
       <li
-        className={`border rounded-md flex gap-2 p-2 cursor-pointer hover:bg-gray-50 ${
+        className={`border rounded-md flex gap-2 p-2 cursor-pointer hover:bg-gray-50 overflow-x-hidden ${
           selectedChatUser?.id === user?.user?.id ? "bg-gray-50" : "bg-white"
         }`}
         onClick={() =>
